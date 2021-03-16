@@ -1,11 +1,19 @@
 #include <iostream>
 #include <iomanip>
 #include <chrono> 
+#include <vector>
+#include <algorithm>
 
 using namespace std;
 
 
+double relativeError(double error_value,double real_value){
+    return abs((error_value - real_value)/real_value);
+}
 
+double absoluteError(double error_value, double real_value){
+    return abs(error_value - real_value);
+}
 
 float sumFloat(float arr[],int N){
     float sum = 0;
@@ -15,13 +23,23 @@ float sumFloat(float arr[],int N){
     return sum;
 }
 
-float relativeError(float error_value,float real_value){
-    return abs((error_value - real_value)/real_value);
+vector<float> sumFloatPlot(float arr[],int N,int interval){
+    //only generates a vector, doesnt actaully plot the values
+    float sum = 0;
+    vector<float> relativeErrorValues;
+    int k = 0;
+    for(int i = 0;i<N;i++){
+        sum+=arr[i];
+        if(i%interval == 0){
+            relativeErrorValues.push_back(relativeError(sum,arr[i]*(i+1))); 
+            k++;
+        }
+    }
+    return relativeErrorValues;
+
 }
 
-float absoluteError(float error_value, float real_value){
-    return abs(error_value - real_value);
-}
+
 
 
 float recursiveSum(float arr[], int left, int right)
@@ -50,17 +68,22 @@ float kahanAlgorithm(float arr[],int N){
 
 
 int main(){
+    
+    
     const int N = 10000000;
     float *arr = new float[N];
-    float v = 0.53125;
+    float v = 0.53125f;
+    const float badCaseValue = 0.333333f;
+    
     for(int i = 0; i < N;i++){
         arr[i] = v;
     }
 
-    float sum = sumFloat(arr,N);
+    
     float realValue = N*v;
-    float recSum = recursiveSum(arr,0,N);
-    float kahanSum = kahanAlgorithm(arr,N);
+    float sum = sumFloat(arr,N); //regular sum value
+    float recSum = recursiveSum(arr,0,N-1); //recursive sum value 
+    float kahanSum = kahanAlgorithm(arr,N); //kahan algorithm sum value
 
     
     cout << "Real value: " << setprecision(10) << realValue << endl;
@@ -83,6 +106,26 @@ int main(){
     cout << endl;
 
 
+    //bad case for recursive sum algorithm 
+    const int badCaseArraySize = 10000000;
+    float *badCaseArray = new float[badCaseArraySize];
+    for(int i =0;i<badCaseArraySize;i++){
+        badCaseArray[i] = badCaseValue;
+    }
+   
+
+    float badCaseRecSum = recursiveSum(badCaseArray,0,badCaseArraySize-1);
+    float badCaseArrayRealValue = badCaseValue*badCaseArraySize;
+
+
+
+    cout << "Absolute error recursive sum for sorted array: " << setprecision(10) << absoluteError(badCaseRecSum,badCaseArrayRealValue) << endl;
+    cout << "Relative error recursive sum for sorted array: " << setprecision(10) << relativeError(badCaseRecSum,badCaseArrayRealValue) << endl;
+
+
+    cout << endl;
+
+
 
     auto start = std::chrono::high_resolution_clock::now();  
     sumFloat(arr,N);
@@ -100,6 +143,7 @@ int main(){
 
     cout << "Recursive sum time: " << duration.count() << " microseconds"<< endl; 
 
+
     start = std::chrono::high_resolution_clock::now(); 
     kahanAlgorithm(arr,N);
     stop = std::chrono::high_resolution_clock::now(); 
@@ -116,6 +160,12 @@ int main(){
     cout << "Relative error kahan algorithm: " << setprecision(10) << relativeError(kahanSum,realValue) << endl;
 
 
+    //creating array of relative error values used to plot the error
+    //the plot is plotted outside of this code
+    auto plot = sumFloatPlot(arr,N,25000);
+   
+   
 
-
+    delete(arr);
+    delete(badCaseArray);
 }

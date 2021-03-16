@@ -39,8 +39,6 @@ float dirichletSumBackwards(int n,float s){
 
 
 
-
-
 float riemannSumDouble(int n, double s){
     double sum = 0;
     for(double k = 1;k <= n;k++){
@@ -137,9 +135,9 @@ int main(){
 
     for(int i = 0; i < N; i++){
         for(int j = 0; j < N; j++){
-            cout << "n = " << n[i] << " s = " << s_double[j] << " Riemann zeta function sum forward, double: " 
+            cout << "n = " << n[i] << " s = " << s_double[j] << " Riemann zeta function sum backwards, double: " 
             << setprecision(10) << riemannSumDoubleBackwards(n[i],s_double[j]) << endl;
-            cout << "n = " << n[i] << " s = " << s_double[j] <<  " Dirichlet eta function sum forward, float: " 
+            cout << "n = " << n[i] << " s = " << s_double[j] <<  " Dirichlet eta function sum backwards, float: " 
             << setprecision(10) << dirichletSumDoubleBackwards(n[i],s_double[j]) << endl;
             cout << endl;
         }
