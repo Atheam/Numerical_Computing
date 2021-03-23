@@ -1,5 +1,6 @@
 import numpy as np
 import time
+from copy import deepcopy
 
 def gauss_jordan(A:np.array,B:np.array) -> np.array:
 	n = A.shape[0]
@@ -9,11 +10,11 @@ def gauss_jordan(A:np.array,B:np.array) -> np.array:
 		pivot_idx = np.argmax(np.abs(A[:,col][col:])) + col
 		A[[col,pivot_idx]] = A[[pivot_idx,col]]
 		B[col],B[pivot_idx] = B[pivot_idx],B[col]
-
+	
 		for row in range(n):
 			if row == col:
 				continue
-			multiplier = A[row,col]/A[col,col]
+			multiplier = A[row,col]/A[col,col]	
 			
 			A[row] -= multiplier * A[col]
 			B[row] -= multiplier * B[col]
@@ -45,22 +46,31 @@ GJ_res = []
 LS_res =[]
 LL_res = []
 
+
+
+
 for count,pair in enumerate(tab,start= 5): 
+	A_copy1= deepcopy(pair[0])
+	B_copy1= deepcopy(pair[1])
+	A_copy2= deepcopy(pair[0])
+	B_copy2= deepcopy(pair[1])
+	A_copy3= deepcopy(pair[0])
+	B_copy3= deepcopy(pair[1])
 	
 	start = time.time()
-	gauss_jordan(pair[0],pair[1])
+	gauss_jordan(A_copy1,B_copy1)
 	end = time.time()
 	print(count*100," Gauss-Jordan: ",end-start)
 	GJ_res.append((count*100,end-start))
 
 	start = time.time()
-	np.linalg.solve(pair[0],pair[1])
+	np.linalg.solve(A_copy2,B_copy2)
 	end = time.time()
 	print(count*100," linalg.solve: ",end-start)
 	LS_res.append((count*100,end-start))
 
 	start = time.time()
-	np.linalg.lstsq(pair[0],pair[1])
+	np.linalg.lstsq(A_copy3,B_copy3)
 	end = time.time()
 	print(count*100," linalg.lstsq: ",end-start)
 	LL_res.append((count*100,end-start))
@@ -77,5 +87,7 @@ plt.ylabel("seconds")
 plt.xlabel("n dimensions")
 plt.legend()
 plt.show()
+
+
 
 
