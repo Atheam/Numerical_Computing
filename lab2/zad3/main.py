@@ -1,6 +1,7 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
+from generate import *
 
 def load_graph(filename):
     G = nx.Graph()
@@ -25,6 +26,9 @@ def load_graph(filename):
     return G
 
 
+
+
+
 def solve_ciruit(G):
     cycles = nx.cycle_basis(G)
     
@@ -47,7 +51,7 @@ def solve_ciruit(G):
                 else:
                     A[row][edge['id']] = edge['resistance'] if edge['direction'] == node_to else edge['resistance'] * (-1)
             if edge['voltage'] != 0:
-                B[row] = edge['voltage']
+                B[row] = edge['voltage'] *(-1)
         row +=1
 
 
@@ -63,36 +67,53 @@ def solve_ciruit(G):
                 edge = G.edges[edge_nodes[0],edge_nodes[1]]
                 node_to = edge['direction']
                 A[row][edge['id']] = 1.0 if node == node_to else -1.0
+              
             row+=1
     I = np.linalg.solve(A,B)
+    
     return I
 
 
 
 def draw_circuit(G,I):
-    i = 0
+    G_di = nx.DiGraph()
+    id = 0
     for edge_nodes in G.edges:
-        edge = G.edges[edge_nodes[0],edge_nodes[1]]
+        edge = G.edges[edge_nodes[0],edge_nodes[1]] 
         if edge['voltage'] == 0:
-            edge['current'] = I[i] 
+            node_to = edge['direction']
+            node_from = edge_nodes[0] if edge_nodes[0] != node_to else edge_nodes[1]
+            if I[id] < 0:
+                node_to,node_from = node_from,node_to
+                I[id] *= -1
+            G_di.add_edge(node_from,node_to,current = round(I[edge['id']],2))    
+            id +=1
         else:
-            i-=1
-        i+=1
-    
-    pos = nx.spring_layout(G)
-    nx.draw_networkx_nodes(G,pos)
-    nx.draw_networkx_labels(G, pos)
-    nx.draw_networkx_edges(G, pos)
-    labels = nx.get_edge_attributes(G,'current')
-    nx.draw_networkx_edge_labels(G,pos,edge_labels=labels)
+            node_from = edge_nodes[0]
+            node_to = edge_nodes[1]
+            G_di.add_edge(node_from,node_to,current = None) 
+
+    if nx.check_planarity(G_di):
+        pos = nx.planar_layout(G_di)
+    else:
+        pos = nx.spring_layout(G_di)
+    nx.draw_networkx_nodes(G_di,pos)
+    nx.draw_networkx_labels(G_di, pos)
+    nx.draw_networkx_edges(G_di, pos)
+    labels = nx.get_edge_attributes(G_di,'current')
+    nx.draw_networkx_edge_labels(G_di,pos,edge_labels=labels)
     plt.show()
 
 
-G = load_graph("graph.txt")    
-I = solve_ciruit(G)
+
+    
 
 
-draw_circuit(G,I)
+while(1):
+    G = generate_mesh(4,3) 
+    I = solve_ciruit(G)
+    print(I)
+    draw_circuit(G,I)
 
 
 
