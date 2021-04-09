@@ -66,7 +66,7 @@ def generate_cubic(n):
 
     return G
 
-def generate_mesh(m,n=2):
+def generate_grid(m,n=2):
     G = nx.grid_2d_graph(m,n)
     R = np.random.uniform(1.0,100.0)
     id = 0
@@ -96,8 +96,7 @@ def generate_mesh(m,n=2):
 
     return G
 
-def generate_small_world(n,k=2,p=0.5):
-
+def generate_small_world(n,k=10,p=0.1): 
     G = nx.connected_watts_strogatz_graph(n,k,p)
     R = np.random.uniform(1.0,100.0)
     id = 0

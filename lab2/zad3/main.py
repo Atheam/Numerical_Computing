@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from generate import *
 
+
 def load_graph(filename):
     G = nx.Graph()
     
@@ -26,7 +27,7 @@ def load_graph(filename):
     return G
 
 
-def solve_ciruit(G):
+def solve_kirch(G):
     cycles = nx.cycle_basis(G)
     
     n = len(G.edges) - 1
@@ -180,29 +181,6 @@ def draw_circuit(G,I):
     nx.draw_networkx_edge_labels(G_di,pos,edge_labels=labels)
     plt.show()
 
-
-print(test_solutions())
-
-#G = generate_small_world(15,3,1) 
-#G = load_graph("graph.txt")
-#G = generate_erdos(7,0.5)
-#G = load_graph("graph.txt")
-#I_1 = solve_potential(G)
-#I_2 = solve_ciruit(G)
-#print(I_1)
-#print(I_2)
-#print(abs(I_1) - abs(I_2) < 0.000001)
-
-#draw_circuit(G,I_1)
-"""
-pos = nx.spring_layout(G)
-nx.draw_networkx_nodes(G,pos)
-nx.draw_networkx_labels(G, pos)
-nx.draw_networkx_edges(G, pos)
-labels = nx.get_edge_attributes(G,'resistance')
-nx.draw_networkx_edge_labels(G,pos,edge_labels=labels)
-plt.show()
-"""
 
 
 

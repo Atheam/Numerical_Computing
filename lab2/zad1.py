@@ -19,7 +19,6 @@ def gauss_jordan(A:np.array,B:np.array) -> np.array:
 			A[row] -= multiplier * A[col]
 			B[row] -= multiplier * B[col]
 
-
 	return B/np.diag(A)
 
 
@@ -45,9 +44,6 @@ tab = [(A1,B1),(A2,B2),(A3,B3),(A4,B4),(A5,B5),(A6,B6),(A7,B7),(A8,B8),(A9,B9),(
 GJ_res = []
 LS_res =[]
 LL_res = []
-
-
-
 
 for count,pair in enumerate(tab,start= 5): 
 	A_copy1= deepcopy(pair[0])
@@ -77,7 +73,6 @@ for count,pair in enumerate(tab,start= 5):
 
 
 import matplotlib.pyplot as plt
-
 
 plt.scatter(*zip(*GJ_res),label = "gauss_jordan time")
 plt.scatter(*zip(*LS_res),label = "linalg.solve time")

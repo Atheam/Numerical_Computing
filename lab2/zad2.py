@@ -9,11 +9,8 @@ def LU_factorization(A):
             multiplier = A[row][col] / A[col][col]
             A[row][col+1:n] -= multiplier * A[col][col+1:n]
             A[row][col] = multiplier
-    
-    #return L,U
+
     return A 
-
-
 
 
 def generate_matrix(n):
@@ -25,9 +22,9 @@ A = generate_matrix(50)
 A_copy = deepcopy(A)
 
 
-res = LU_factorization(A_copy)
-U = np.triu(res)
-L = np.tril(res)
+result = LU_factorization(A_copy)
+U = np.triu(result)
+L = np.tril(result)
 np.fill_diagonal(L,1)
 
 print(abs(A - L@U) < 0.0000000001)
