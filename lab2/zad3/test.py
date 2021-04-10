@@ -1,5 +1,6 @@
 from main import *
 from generate import *
+from copy import deepcopy
 
 
 
@@ -8,8 +9,8 @@ def test_erdos():
     print("ERDOS GRAPH TEST")
     for n in N:
         G = generate_erdos(n,p=0.3)
-        I_1 = solve_potential(G)
-        I_2 = solve_kirch(G)
+        I_2 = solve_kirch(deepcopy(G))
+        I_1 = solve_potential(deepcopy(G))
         
         
         test_tab = (abs(I_1 - I_2) < 0.001) | (abs(I_1 + I_2) < 0.001)
@@ -24,8 +25,8 @@ def test_cubic():
     N = [n for n in range(20,201,20)]
     for n in N:
         G = generate_cubic(n)
-        I_1 = solve_potential(G)
-        I_2 = solve_kirch(G)
+        I_1 = solve_potential(deepcopy(G))
+        I_2 = solve_kirch(deepcopy(G))
         
         
         test_tab = (abs(I_1 - I_2) < 0.001) | (abs(I_1 + I_2) < 0.001)
@@ -40,8 +41,8 @@ def test_grid():
     N = [n for n in range(3,14,2)]
     for n in N:
         G = generate_grid(n,n)
-        I_1 = solve_potential(G)
-        I_2 = solve_kirch(G)
+        I_1 = solve_potential(deepcopy(G))
+        I_2 = solve_kirch(deepcopy(G))
         
         
         test_tab = (abs(I_1 - I_2) < 0.001) | (abs(I_1 + I_2) < 0.001)
@@ -56,8 +57,8 @@ def test_small_world():
     N = [n for n in range(20,201,20)]
     for n in N:
         G = generate_small_world(n)
-        I_1 = solve_potential(G)
-        I_2 = solve_kirch(G)
+        I_1 = solve_potential(deepcopy(G))
+        I_2 = solve_kirch(deepcopy(G))
         
         
         test_tab = (abs(I_1 - I_2) < 0.001) | (abs(I_1 + I_2) < 0.001)
@@ -73,17 +74,36 @@ def draw_examples():
     G3 = generate_grid(4,4)
     G4 = generate_small_world(15,k=4)
 
-    draw_circuit(G1,solve_kirch(G1))
-    draw_circuit(G1,solve_potential(G1))
+    G1_copy = deepcopy(G1)
+    G2_copy = deepcopy(G2)
+    G3_copy = deepcopy(G3)
+    G4_copy = deepcopy(G4)
 
-    draw_circuit(G2,solve_kirch(G2))
-    draw_circuit(G2,solve_potential(G2))
 
-    draw_circuit(G3,solve_kirch(G3))
-    draw_circuit(G3,solve_potential(G3))
+    I = solve_kirch(G1_copy)
+    draw_circuit(G1_copy,I)
 
-    draw_circuit(G4,solve_kirch(G4))
-    draw_circuit(G4,solve_potential(G4))
+    I = solve_potential(G1)
+    draw_circuit(G1,I)
+    
+
+    I = solve_kirch(G2_copy)
+    draw_circuit(G2_copy,I)
+
+    I = solve_potential(G2)
+    draw_circuit(G2,I)
+
+    I = solve_kirch(G3_copy)
+    draw_circuit(G3_copy,I)
+
+    I = solve_potential(G3)
+    draw_circuit(G3,I)
+
+    I = solve_kirch(G4_copy)
+    draw_circuit(G4_copy,I)
+
+    I = solve_potential(G4)
+    draw_circuit(G4,I)
 
 
         
