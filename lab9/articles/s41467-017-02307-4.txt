@@ -1,0 +1,410 @@
+Practical device-independent quantum cryptography via entropy accumulation
+Device-independent cryptography goes beyond conventional quantum cryptography by providing security that holds independently of the quality of the underlying physical devices. Device-independent protocols are based on the quantum phenomena of non-locality and the violation of Bell inequalities. This high level of security could so far only be established under conditions which are not achievable experimentally. Here we present a property of entropy, termed “entropy accumulation”, which asserts that the total amount of entropy of a large system is the sum of its parts. We use this property to prove the security of cryptographic protocols, including device-independent quantum key distribution, while achieving essentially optimal parameters. Recent experimental progress, which enabled loophole-free Bell tests, suggests that the achieved parameters are technologically accessible. Our work hence provides the theoretical groundwork for experimental demonstrations of device-independent cryptography.
+Device-independent (DI) quantum cryptographic protocols achieve an unprecedented level of security—with guarantees that hold (almost) irrespective of the quality, or trustworthiness, of the physical devices used to implement them1. The most challenging cryptographic task in which DI security has been considered is quantum key distribution (QKD); we will use this task as an example throughout the manuscript. In DIQKD, the goal of the honest parties, called Alice and Bob, is to create a shared key, unknown to everybody else but them. To execute the protocol, they hold a device consisting of two parts: each part belongs to one of the parties and is kept in their laboratories. Ideally, the device performs measurements on some entangled quantum states it contains.
+In real life, the manufacturer of the device, called Eve, can have limited technological abilities (and hence cannot guarantee that the device’s actions are exact and non-faulty) or even be malicious. The device itself is far too complex for Alice and Bob to open and assess whether it works as Eve alleges. Alice and Bob must therefore treat the device as a black box with which they can only interact according to the protocol. The protocol must allow them to test the possibly faulty or malicious device and decide whether using it to create their keys poses any security risk. The protocol guarantees that by interacting with the device according to the specified steps, the honest parties will either abort, if they detect a fault, or produce identical and secret keys (with high probability).
+Adopting the DI approach is not only crucial for the paranoid cryptographers; even the most skilled experimentalist will recognise that a fully characterised, stable at all times, large-scale quantum device that implements a QKD protocol is extremely hard to build. Indeed, implementations of QKD protocols have been attacked by exploiting imperfections of the devices2,3,4,5. Instead of trying to come up with a “patch” each time an imperfection in the device is detected, DI protocols allow us to break the cycle of attacks and countermeasures.
+The most important (in fact necessary) ingredient, which forms the basis of all DI protocols, is a “test for quantumness” based on the violation of a Bell inequality6,7,8,9. A Bell inequality10,11 can be thought of as a game played by the honest parties using the device they share (Fig. 1). Different devices lead to different winning probabilities when playing the game. The game has a special “feature”—there exists a quantum device which achieves a winning probability ωq greater than all classical, local, devices. Hence, if the honest parties observe that their device wins the game with probability ωq they conclude that it must be non-local11. A recent sequence of breakthrough experiments have verified the quantum advantage in such “Bell games” in a loophole-free way12,13,14 (in particular, this means that the experiments were executed without making assumptions that could otherwise be exploited by Eve to compromise the security of a cryptographic protocol).
+The Clauser–Horne–Shimony–Holt game34. Alice and Bob input bits, separately, into their parts of the shared device. Each part of the device supplies an output. The game is won if a ⊕ b = x ⋅ y. The optimal winning probability in this game for a classical device is 75%. A quantum device can get up to approximately 86% by measuring the maximally entangled state \(\left| {{\mathrm{\Phi }}^ + } \right\rangle\) = \(\left( {\left| {00} \right\rangle + \left| {11} \right\rangle } \right){\mathrm{/}}\sqrt 2\) with the following measurements: Alice’s measurements x = 0 and x = 1 correspond to the Pauli operators σ
+z
+ and σ
+x
+, respectively, and Bob’s measurements y = 0 and y = 1 to \(\left( {\sigma _z + \sigma _x} \right){\mathrm{/}}\sqrt 2\) and \(\left( {\sigma _z - \sigma _x} \right){\mathrm{/}}\sqrt 2\), respectively
+DI security relies on the following deep but well-established facts. High winning probability in a Bell game not only implies that the measured system is non-local, but more importantly that the kind of non-local correlations it exhibits cannot be shared: the higher the winning probability, the less information any eavesdropper can have about the devices’ outcomes. The tradeoff between winning probability and secret randomness, or entropy, can be made quantitative15,16.
+The amount of entropy, or secrecy, generated in a single round of the protocol can therefore be calculated from the winning probability in a single game. The major challenge, however, consists in establishing that entropy accumulates additively throughout the multiple rounds of the protocol and use it to bound the total secret randomness produced by the device.
+A commonly used assumption17,18,19,20,21 to simplify this task is that the device held by the honest parties makes the same measurements on identical and independent quantum states in every round i ∈ {1, …, n} of the protocol. This implies that the device is initialised in some (unknown) state of the form σ⊗n, i.e., an independent and identically distributed (i.i.d.) state, and that the measurements have a similar structure. In that case, the total entropy created during the protocol can be easily related to the sum of the entropies generated in each round separately (as further explained below).
+Unfortunately, although quite convenient for the analysis, the i.i.d. assumption cannot be justified a priori. When considering device-dependent protocols, such as the BB84 protocol22, de Finetti theorems23,24 can often be applied to reduce the task of proving the security in the most general case to that of proving security with the i.i.d. assumption. This approach was unsuccessful in the DI scenario, where known de Finetti theorems23,24,25,26 do not apply. Hence, one cannot simply reduce a general security statement to the one proven under the i.i.d. assumption.
+Without this assumption, however, very little is known about the structure of the untrusted device and hence also about its output. As a consequence, previous DIQKD security proofs had to address directly the most general case27,28,29. This led to security statements which are of limited relevance for practical experimental implementations; they are applicable only in an unrealistic regime of parameters, e.g., small amount of tolerable noise and large number of signals.
+The work presented here resolves this situation. First, we provide a general information-theoretic tool that quantifies the amount of entropy accumulated during sequential processes which do not necessarily behave identically and independently in each step. We call this result the “Entropy Accumulation Theorem” (EAT). We then show how it can be applied to essentially reduce the problem of proving DI security in the most general case to that of the i.i.d. case. This allows us to establish simple and modular security proofs for DIQKD that yield tight key rates. Our quantitative results imply that the first proofs of principle experiments implementing a DIQKD protocol are within reach with today’s state-of-the-art technology. Aside from its application to security proofs, the EAT can be used in other scenarios in quantum information such as the analysis of quantum random access codes.
+In the following, we start by explaining the main steps in a security proof of DIQKD under the i.i.d. assumption using well-established techniques. We then present the EAT and show how it can be used to extend the proof and achieve full security (i.e., without assuming an i.i.d. behaviour of the device).
+The central task when proving the security of cryptographic protocols consists in bounding the information that an adversary, called Eve, may obtain about certain values generated by the protocol, which are supposed to be secret. For QKD, the appropriate measure of knowledge, or rather uncertainty, is given by the smooth conditional min-entropy30 \(H_{{\mathrm{min}}}^\varepsilon \left( {\left. K \right|E} \right)\), where K is the raw data obtained by the honest parties, E the quantum system held by Eve, and ε a parameter describing the security of the protocol. The quantity \(H_{{\mathrm{min}}}^\varepsilon \left( {\left. K \right|E} \right)\) determines the maximal length of the secret key that can be created by the protocol. Hence, proving the security amounts to establishing a lower bound on \(H_{{\mathrm{min}}}^\varepsilon \left( {\left. K \right|E} \right)\). Evaluating \(H_{{\mathrm{min}}}^\varepsilon \left( {\left. K \right|E} \right)\) can be a daunting task, as the adversary’s system E is out of our control; in particular, it can have arbitrary dimension and share quantum correlations with the users’ devices.
+Most protocols consist of a basic building block, or “round”, which is repeated a large number, n, of times; in each round i, the classical data K
+i
+ is generated. The structure of a DIQKD protocol is shown in Box 1. The i.i.d. assumption means that the raw key \(K_1^n = K_1, \ldots ,K_n\) can be treated as a sequence of i.i.d. random variables K
+i
+. That is, all the K
+i
+ are identical and independent of one another. The eavesdropper has side information E
+i
+ about each K
+i
+. In this case, the total conditional min-entropy \(H_{{\mathrm{min}}}^\varepsilon \left( {\left. {K_1^n} \right|E_1^n} \right)\) can be directly related to the single-round conditional von Neumann entropy \(H\left( {\left. {K_i} \right|E_i} \right)\) using the quantum asymptotic equipartition property31 (AEP), which asserts that
+where c
+ε
+ depends only on ε (see the Methods section).
+To get a bound on \(H_{{\mathrm{min}}}^\varepsilon \left( {K_1^n\left| {E_1^n} \right.} \right)\), we therefore need to analyse the secrecy, \(H\left( {K_i\left| {E_i} \right.} \right)\), resulting from a single round of the protocol. Depending on the considered scenario, a lower bound on \(H\left( {K_i\left| {E_i} \right.} \right)\) can be found using different techniques. For discrete- and continuous-variable QKD, for example, one can use the entropic uncertainty relations32,33. When dealing with DIQKD, a quantum advantage in a Bell game implies a lower-bound on \(H\left( {K_i\left| {E_i} \right.} \right)\) as discussed above.
+The Clauser–Horne–Shimony–Holt (CHSH) game34 (presented in Fig. 1) forms the basis for most DIQKD protocols. For this game, a tight bound on the secrecy as a function of the winning probability in the game was derived19. The bound implies that for any quantum state that wins the CHSH game with probability ω, the entropy evaluated on the state of the system after the game has been played is at least
+where h(⋅) is the binary entropy function. This relation is shown in Fig. 2.
+To compute the bound on \(H\left( {K_i\left| {E_i} \right.} \right)\), Alice and Bob need to collect the statistics they observe while running the protocol and estimate the winning probability ω appearing in Eq. (2); assuming the i.i.d. structure this is easily done using Hoeffding’s inequality.
+The conclusion of this section is the following. The i.i.d. assumption plays a crucial role in the above line of proof: it allows us to reduce the problem of calculating the total secrecy of the raw key created by the device to that of bounding the secrecy produced in one round. Instead of dealing with large-scale quantum systems, we are only required to understand the physics of small systems associated with just one round (as in Eq. (2)). The AEP appearing as Eq. (1) does the rest.
+  Given: A device for Alice and Bob that can play the chosen Bell game repeatedly
+For every round i ∈ [n] do Steps 2–4:
+ Alice and Bob choose X
+i
+,Y
+i
+ at random.
+ They input X
+i
+,Y
+i
+ to the device and record the outputs A
+i
+, B
+i
+.
+ Alice sets K
+i
+ = A
+i
+
+Parameter estimation: Alice and Bob estimate the average winning probability in the game from the observed data. If it is below the expected winning probability, ωT, they abort.
+Classical post processing: Alice and Bob apply an error correction protocol and a privacy amplification protocol (both classical) on their raw keys K and B.
+Assuming the device behaves in an i.i.d. way goes completely against the DI setting by imposing a severe and even unrealistic restrictions on the implementation of the device. In particular, the assumption implies that the device does not include any, classical or quantum, internal memory (i.e., its actions in one round cannot depend on the previous rounds) and cannot display time-dependent behaviour.
+Our main contribution can be phrased as follows.
+Theorem (Security of DIQKD, informal): Security of DIQKD in the most general case follows from security under the i.i.d. assumption. Moreover, the dependence of the key rate on the number of exchanged signals, n, is the same as the one in the i.i.d. case, up to terms that scale like \(1{\mathrm{/}}\sqrt n\). The key rates are plotted below.
+We now explain the above theorem and how it is derived in more detail. A general device is described by an (unknown) tripartite state \(\rho _{Q_{\mathrm{A}}Q_{\mathrm{B}}E}\), where the bipartite quantum state \(\rho _{Q_{\mathrm{A}}Q_{\mathrm{B}}}\) is shared between Alice and Bob and ρE belongs to Eve, together with the measurements applied to \(\rho _{Q_{\mathrm{A}}Q_{\mathrm{B}}}\) when the device is used. No additional structure is assumed (see Fig. 3).
+Secrecy for the Clauser–Horne–Shimony–Holt game vs. winning probability. The amount of secret randomness is quantified by the conditional von Neumann entropy \(H\left( {A\left| E \right.} \right)\). As soon as the winning probability is above the classical threshold of 75% some secret randomness is produced. The analytical bound19 is stated as Eq. (2)
+An independent and identically distributed device vs. a general one. An independent and identically distributed (i.i.d.) device (left) is initialised in some (unknown) i.i.d. state σ⊗n; each “small device” is described by one copy of the same bipartite state σ and all copies are measured in the same way. A general device (right) is described by a bipartite quantum state ρ; in contrast to the i.i.d. case, any further division into subsystems is unknown. During the protocol, the state is measured through a sequential process: Alice and Bob use the device in the first round of the protocol and only then proceed to the second round, and so on
+As mentioned above, the standard DIQKD protocol proceeds in rounds (recall Box 1): Alice and Bob use their components in the first round of the protocol and only then proceed to the second round, etc. We leverage this structure to bound the amount of entropy produced during a complete execution of the protocol.
+To do so, we prove a generalisation of the AEP given in Eq. (1) to a scenario in which, instead of the raw key \(K_1^n = K_1, \ldots ,K_n\) being produced by an i.i.d. process, its parts K
+i
+ are produced one after the other. In this case, each K
+i
+ may depend not only on i-th round of the protocol but also on everything that happened in previous rounds (but not on the subsequent ones). We explain our tool, the EAT, in the following.
+We describe here a simplified and informal version of the EAT, sufficient to understand how it can be used to prove the security of DI protocols; for the most general statements see the Methods section.
+We consider processes which can be described by a sequence of n maps \({\cal M}_1, \ldots ,{\cal M}_n\), called “EAT channels”, as shown in Fig. 4. Each \({\cal M}_i\) outputs two systems, O
+i
+, which describes the information that should be kept secret, and S
+i
+, describing some side information leaked by the map, together with a “memory” system R
+i
+, which is passed on as an input to the next map \({\cal M}_{i + 1}\). The systems \(S_1^n\) describe the side information created during the process. A further quantum system, denoted by E, represents additional side information correlated to the initial state in the beginning of the considered process. The systems \(O_1^n\) are then the ones in which entropy is accumulated conditioned on the side information \(S_1^n\) and E.
+Sequential processes. Each map in the sequence \({\cal M}_i\) outputs O
+i
+, which describes the information that should be kept secret, and S
+i
+, describing some side information leaked by the map, together with a “memory” system R
+i
+, which gets passed on to the next map \({\cal M}_{i + 1}\). In each step, an additional classical value C
+i
+ is calculated from O
+i
+ and S
+i
+
+To bound the entropy of \(O_1^n\), we take into account global statistical properties. These are inferred by tests carried out by the protocol on a small sample of the generated outputs. To incorporate such statistical information, we consider for each round an additional classical value C
+i
+ computed from O
+i
+ and S
+i
+. Additionally, in each step of the process, the previous outcomes \(O_1^{i - 1}\) are independent of future information S
+i
+ given all the past side information \(S_1^{i - 1}E\). By choosing O
+i
+ and S
+i
+ properly, this condition can be satisfied by sequential protocols such as DIQKD.
+The EAT relates the total amount of entropy to the entropy accumulated in one step of the process. The latter is quantified by the minimal, or worst-case, von Neumann entropy produced by the maps \({\cal M}_i\) when acting on an input state that reproduces the correct statistics on C
+i
+, i.e., states that satisfy \({\cal M}_i(\sigma )_{C_i} = {\rm freq}(c_1^n)\) where \({\rm freq}(c_1^n)\) is the empirical statistics, or frequency distribution, on \({\cal C}\) defined by \({\rm freq}(c_1^n)(c) = \frac{{\left| {\{ i \in \{ 1, \ldots ,n\} :c_i = c\} } \right|}}{n}\).
+To state the explicit result, we define a “min-tradeoff function”, fmin, from the set of probability distributions over \({\cal C}\) to the real numbers; fmin should be chosen as a convex differentiable function which is bounded above by the worst-case entropy just described:
+An event Ω is defined by a subset of \({\cal C}^n\) and we write \(p_{{\Omega }} = \mathop {\sum}\nolimits_{c_1^n \in {{\Omega }}} ( {\rho _{O_1^nS_1^nE,C_1^n = c_1^n}} )\) for the probability of the event Ω and
+for the state conditioned on Ω. We further define a set \({\hat{ \Omega }}\) over the set of frequencies such that for all \(c_1^n\), \({\rm freq}(c_1^n) \in {\hat{ \Omega }}\) if and only if \(c_1^n \in { {\Omega }}\).
+Theorem (EAT, informal): For any EAT channels, an event Ω such that \({\hat{ \Omega }}\) is a convex set, and a convex min-tradeoff function for which \(f_{{\mathrm{min}}}\left( {\rm freq}({c_1^n}) \right) \ge t\) for any \({\rm freq}(c_1^n) \in {\hat{ \Omega }}\),
+where the conditional smooth min-entropy is evaluated on ρ|Ω and v depends on the values \(\left\| {\nabla f_{{\mathrm{min}}}} \right\|_\infty ,\varepsilon ,p_{{\Omega }}\), and the maximal dimension of the systems O
+i
+.
+Equation (5) asserts that, to first order in n, the total conditional smooth min-entropy is at least n times the value of the min-tradeoff function, evaluated on the empirical statistics observed during the protocol (and hence linear in the number of rounds). In the special case where the EAT channels are independent and identical, the EAT is reduced to the quantum AEP; Eq. (5) is thus a generalisation of Eq. (1).
+To gain intuition on how the EAT can be applied to DIQKD, note the following. Define the maps \({\cal M}_i\) to describe the joint behaviour of the honest parties and their respective uncharacterised device while playing a single round of a Bell game such as the CHSH game. Let Ω be the event of the protocol not aborting or a closely related event, e.g., the event that the fraction of CHSH games won is above some threshold ωT. The state for which the smooth min-entropy is evaluated is ρ|Ω, i.e., the state at the end of the protocol conditioned on not aborting. This implies, in particular, a bound on \(H_{{\mathrm{min}}}^\varepsilon \left( {K_1^n\left| E \right.} \right)\).
+Furthermore, the condition on the min-tradeoff function stated in Eq. (3) corresponds to the requirement that the distribution of C
+i
+ equals \(c_1^n\), which ensures that the entropy in Eq. (3) is evaluated on states that can be used to win the CHSH game with probability ωT. Thus, in order to devise an appropriate min-tradeoff function, we can use the relation appearing in Eq. (2); the exact details are given in the Methods section. This results in a tight bound on the amount of entropy created in each step of the protocol. In this sense, we reduce the problem of proving the security of the whole protocol to that of a single round.
+Using the EAT we get a bound on \(H_{{\mathrm{min}}}^\varepsilon \left( {K_1^n\left| E \right.} \right)\) which, to first order in n, coincides with the one derived under the i.i.d. assumption and is thus optimal. The final key rate \(r = \ell {\mathrm{/}}n\) (where \(\ell\) is the length of a key) produced in a DIQKD protocol depends on this amount of entropy and the amount of information leaked during standard classical post-processing steps. We plot the results for specific choices of parameters in Fig. 5.
+Key rate in a DIQKD protocol. The plots show the key rate r as a function of a the quantum bit error rate Q and b the number of signals n. The completeness error, i.e., the probability that the protocol aborts when using an honest implementation of the device, e.g., due to statistical fluctuations, was chosen to be \(\varepsilon _{{\mathrm{QKD}}}^c = 10^{ - 2}\). The soundness error, which quantifies the maximum tolerated deviation of the actual protocol from a hypothetical one where a perfectly random and completely secret key is produced for Alice and Bob, is taken to be \(\varepsilon _{{\mathrm{QKD}}}^s = 10^{ - 5}\). Both of these values are considered to be realistic and relevant for actual applications. The rates are calculated using Eq. (35) which is derived in the Methods section
+To calculate the key rate, one must have some honest implementation of the protocol in mind; this is given by what the experimentalists think (or guess) is happening in their experiment when an adversary is not present. It does not, in any way, restrict the actions of the adversary or the types of imperfections in the device. We consider the following honest implementation, but the analysis can be adapted to any other implementation of interest.
+In the realisation of the device, in each round, Alice and Bob share the two-qubit Werner state \(\rho _{Q_{\mathrm{A}}Q_{\mathrm{B}}} = (1 - \nu )\left| {{\mathrm{\Phi }}^ + } \right\rangle \left\langle {{\mathrm{\Phi }}^ + } \right| + \nu {\Bbb I}{\mathrm{/}}4\) resulting from a depolarisation noise acting on the maximally entangled state \(\left| {{\mathrm{\Phi }}^ + } \right\rangle\). In every round, the measurements for X
+i
+, Y
+i
+ ∈ {0, 1} are as described in Fig. 1 and for Y
+i
+ = 2 Bob’s measurement is σ
+z
+. The winning probability in the CHSH game (restricted to X
+i
+, Y
+i
+ ∈ {0, 1}) using these measurements on \(\rho _{Q_{\mathrm{A}}Q_{\mathrm{B}}}\) is \(\omega _{{\mathrm{exp}}} = \left[ {2 + \sqrt 2 (1 - \nu )} \right]{\mathrm{/}}4\). The quantum bit error rate \(Q = {\mathrm{Pr}}\left[ {\left. {A_i \ne B_i} \right|\left( {X_i,Y_i} \right) = (0,2)} \right]\) for the above state and measurements is given by Q = ν/2.
+The key rate r is plotted in Fig. 5. For n = 1015, the curve essentially coincides with the rate achieved in the asymptotic i.i.d. case19. Since the latter was shown to be optimal19, it provides an upper bound on the key rate and the amount of tolerable noise. Hence, for large enough n our rates become optimal and the protocol can tolerate up to the maximal error rate Q = 7.1%. For comparison, the previously established explicit rates28 are well below the lowest curve presented in Fig. 5, even when the number of signals goes to infinity, with a maximal noise tolerance of 1.6%. Moreover, our key rates are comparable to those achieved in device-dependent QKD protocols35.
+The information theoretic tool, the EAT, reveals a novel property of entropy: the operationally relevant total uncertainty about an n-partite system created in a sequential process corresponds to the sum of the entropies of its parts, even without an independence assumption.
+Using the EAT, we show that practical and realistic protocols can be used to achieve the unprecedented level of DI security. The next major challenge in experimental implementations is a field demonstration of a DIQKD protocol. This would provide the strongest cryptographic experiment ever realised. The work presented here provides the theoretical groundwork for such experiments. Our quantitative results imply that the first proofs of principle experiments, with small distances and small rates, are within reach with today’s state-of-the-art technology, which recently enabled the violation of Bell inequalities in a loophole-free way.
+We state here the main theorems of our work and sketch the proofs. Using the explicit expressions given below, one can reproduce the key rates presented in Fig. 5.
+In this section, we are interested in the general question of whether entropy accumulates, in the sense that the operationally relevant total uncertainty about an n-partite system \(O_1^n\) corresponds to the sum of the entropies of its parts O
+i
+. The AEP, given in Eq. (1), implies that this is indeed the case to first order in n—under the assumption that the parts O
+i
+ are identical and independent of each other. Our result shows that entropy accumulation occurs for more general processes, i.e., without an independence assumption, provided one quantifies the uncertainty about the individual systems O
+i
+ by the von Neumann entropy of a suitably chosen state.
+The type of processes that we consider are those that can be described by a sequence of channels, as illustrated in Fig. 4. Such channels are called EAT channels and are formally defined as follows.
+Definition 1 (EAT channels): EAT channels \({\cal M}_i:R_{i - 1} \to R_iO_iS_iC_i\), for i ∈ [n], are CPTP (completely positive trace preserving) maps such that for all i ∈ [n]:
+C
+i
+ are finite-dimensional classical systems (random variables). O
+i
+, S
+i
+, and R
+i
+ are quantum registers. The dimension of O
+i
+ is \(d_{O_i}.\)
+For any input state \(\sigma _{R_{i - 1}R{\prime}}\), where R′ is a register isomorphic to Ri−1, the output state \(\sigma _{R_iO_iS_iC_iR{\prime}} = \left( {{\cal M}_i \otimes {\Bbb I}_{R{\prime}}} \right)\left( {\sigma _{R_{i - 1}R{\prime}}} \right)\) has the property that the classical value C
+i
+ can be measured from the system \(\sigma _{O_iS_i}\) without changing the state.
+For any initial state \(\rho _{R_0E}^0\), the final state \(\rho _{O_1^nS_1^nC_1^nE} = \left( {\left( {{\mathrm{Tr}}_{R_n} \circ {\cal M}_n \circ \ldots \circ {\cal M}_1} \right) \otimes {\Bbb I}_E} \right)\rho _{R_0E}^0\) fulfils the Markov chain condition \(O_1^{i - 1} \leftrightarrow S_1^{i - 1}E \leftrightarrow S_i\) for each i ∈ [n].
+In the above definition, \(O_1^{i - 1} \leftrightarrow S_1^{i - 1}E \leftrightarrow S_i\) if and only if their conditional mutual information is 0, \(I\left( {O_1^{i - 1}:S_i\left| {S_1^{i - 1}} \right.E} \right) = 0\).
+Next, one should find an adequate way to quantify the amount of entropy which is accumulated in a single step of the process, i.e., in an application of just one channel. To do so, let p be a probability distribution over \({\cal C}\), where \({\cal C}\) denotes the common alphabet of \(C_1, \ldots ,C_n\), and R′ be a system isomorphic to Ri−1. We define the set of states
+where \(\sigma _{C_i}\) denotes the probability distribution over \({\cal C}\) with the probabilities given by \(\left\langle c \right|\sigma _{C_i}\left| c \right\rangle\).
+The tradeoff functions for the EAT channels are defined below.
+Definition 2 (Tradeoff functions): A real function is called a min- or max-tradeoff function for \({\cal M}_i\) if it satisfies
+or
+respectively, and if it is convex or concave, respectively. If the set Σ
+i
+(p) is empty, then the infimum and supremum are by definition equal to ∞ and −∞, respectively, so that the conditions are trivial.
+To get some intuition as to why the above definition is the “correct” one, consider the following classical example. Each EAT channel outputs a single bit O
+i
+ without any side information S
+i
+ about it; the system E is empty as well. Every bit can depend on the ones produced previously. We would like to extract randomness out of the sequence \(O_1^n\); for this we should find a lower bound on \(H_{{\mathrm{min}}}^\varepsilon \left( {O_1^n} \right)\).
+We ask the following question—given the randomness of O1 which is already accounted for, how much randomness does O2 contribute? One possible guess is the conditional von Neumann entropy \(H\left( {\left. {O_2} \right|O_1} \right) = {\Bbb E}_{o_1,o_2}\left[ { - {\mathrm{log}}\,{\mathrm{Pr}}\left( {\left. {o_2} \right|o_1} \right)} \right]_{}^{}\). If, however, O1 is uniform while O2 is fixed when O1 = 0 and uniform otherwise, then \(H\left( {\left. {O_2} \right|O_1} \right)\) is too optimistic; the amount of extractable randomness is quantified by the smooth min-entropy, which depends on the most probable value of O1O2, and not by an average quantity as the von Neumann entropy.
+Another possible guess is a worst-case version of the min-entropy \(H_{{\mathrm{min}}}^{{\rm w.c.}} = {\mathrm{min}}_{o_1,o_2}\left[ { - {\mathrm{log}}\,{\mathrm{Pr}}\left( {\left. {o_2} \right|o_1} \right)} \right]\). This, however, is too pessimistic; when the O
+i
+’s are independent of each other, the extractable amount of randomness behaves like the von Neumann entropy in first order, and not like the min-entropy.
+We therefore choose an intermediate quantity—\({\mathrm{min}}_{o_1}\,{\Bbb E}_{o_2}\left[ { - {\mathrm{log}}\,{\mathrm{Pr}}\left( {\left. {o_2} \right|o_1} \right)} \right] = {\mathrm{min}}_{o_1}\,H\left( {\left. {O_2} \right|O_1 = o_1} \right)\). That is, this quantity is the von Neumann entropy of O2, evaluated for the worst-case state in the beginning of the second step of the process. The min-tradeoff function defined above is the quantum analogue version of this.
+Informally, the min-tradeoff function can be understood as the amount of entropy available from a single round, conditioned on the outputs of the previous rounds. Since we condition on the previous rounds, one can think of the randomness of the current round as independent from past events. Intuitively, this suggests that, by appropriately generalising the proof of the AEP, one can argue that the entropy that is contributed by this independent randomness in each round accumulates.
+The formal statement of the EAT is as follows.
+Theorem 3 (EAT, formal): Let \({\cal M}_i:R_{i - 1} \to R_iO_iS_iC_i\) for i ∈ [n] be EAT channels, ρ be the final state, Ω an event defined over \({\cal C}^n\), p
+Ω
+ the probability of Ω in ρ, and ρ|Ω the final state conditioned on Ω. Let εs ∈ (0, 1).
+For fmin, a min-tradeoff function for \(\left\{ {{\cal M}_i} \right\}\), \({\hat{ \Omega }} = \left\{ {\left. {\rm freq}({c_1^n}) \right|c_1^n \in { {\Omega }}} \right\}\) convex, and any \(t \in {\Bbb R}\) such that \(f_{{\mathrm{min}}}\left( {\rm freq}({c_1^n}) \right) \ge t\) for any \(c_1^n \in {\cal C}^n\) for which \({\mathrm{Pr}}\left[ {c_1^n} \right]_{{\mathrm{\rho }}_{{{|\Omega }}}} > 0\),
+where
+Similarly, for fmax a max-tradeoff function and \(t \in {\Bbb R}\) such that \(f_{{\mathrm{max}}}\left({\rm freq}({c_1^n}) \right) \le t\) for any \({\bf{c}} \in {\cal C}^n\) for which \({\mathrm{Pr}}\left[ {\bf{c}} \right]_{{\mathrm{\rho }}_{{{|\Omega }}}} > 0\),
+The two most important properties of the above statement are that the first-order term is linear in n and that t is the von Neumann entropy of a suitable state (as explained above). This implies that the EAT is tight to first order in n.
+We remark that the Markov chain conditions are important, in the sense that dropping them completely would render the statement invalid.
+We now give a rough proof sketch of the \(H_{{\mathrm{min}}}^\varepsilon\) case; the bound for \(H_{{\mathrm{max}}}^\varepsilon\) follows from an almost identical argument. The proof has a similar structure to that of the quantum AEP31, which we can retrieve as a special case. The proof relies heavily on the “sandwiched” Rényi entropies36,37, which is a family of entropies that we will denote here by H
+α
+, where α is a real parameter ranging from \(\frac{1}{2}\) to ∞, and which corresponds to the max-entropy at \(\alpha = \frac{1}{2}\), to the von Neumann entropy when α = 1, and to the min-entropy when α = ∞.
+The basic idea is to first lower bound the \(H_{{\mathrm{min}}}^\varepsilon\) term by H
+α
+ using the following general bound31,38,39,40:
+Then, we lower bound the H
+α
+ term by the von Neumann entropy using the following31,39:
+Now, we could simply chain these two inequalities and apply them to \(H_{{\mathrm{min}}}^\varepsilon \left( {\left. {O_1^n} \right|S_1^nE} \right)\). However, this would result in a very poor bound due to the \(O\left( {\left( {{\mathrm{log}}\,d_A} \right)^2} \right)\) term in Eq. (13), which in our case would be O(n2). To get the bound we want, we need to reduce this term to O(n); choosing \(\alpha \approx 1 + \frac{1}{{\sqrt n }}\) would then produce a bound with the right scaling.
+The trick we use to achieve this is to decompose \(H_\alpha \left( {O_1^n\left| {S_1^nE} \right.} \right)\) into n terms of constant size before applying Eq. (13). In the quantum AEP31, this step is immediate since the state is i.i.d. Here, we must use more sophisticated techniques. Specifically, we use the following chain rule for the sandwiched Rényi entropy to decompose \(H_\alpha \left( {O_1^n\left| {S_1^nE} \right.} \right)\) into n terms:
+Theorem 4: Let \(\rho _{RA_1B_1}^0\) be a density operator on R ⊗ A1 ⊗ B1 and \({\cal M} = {\cal M}_{A_2B_2 \leftarrow R}\) be a CPTP map. Assuming that \(\rho _{A_1B_1A_2B_2} = {\cal M}( {\rho _{RA_1B_1}^0} )\) satisfies the Markov condition A1↔B1↔B2,we have
+where the infimum ranges over density operators \(\omega _{RA_1B_1}\) on R ⊗ A1 ⊗ B1. Moreover, if \(\rho _{RA_1B_1}^0\) is pure, then we can optimise over pure states \(\omega _{RA_1B_1}\).
+Implementing this proof strategy then yields the following chain of inequalities:
+However, this does not yet take into account the sampling over the C
+i
+ subsystems. To do this, we tweak the EAT channels \({\cal M}_i\) to output two extra systems D
+i
+ and \(\bar D_i\) which contain an amount of entropy that depends on the value of C
+i
+ observed. To define this, let g be an affine lower bound on fmin, let \(\left[ {g_{{\mathrm{min}}},g_{{\mathrm{max}}}} \right]\) be the smallest interval that contains the range of g, and set \(\bar g: = \frac{1}{2}\left( {g_{{\mathrm{min}}} + g_{{\mathrm{max}}}} \right)\). Then, we define \({\cal D}_i:C_i \to C_iD_i\bar D_i\) as
+where τ(c) is a mixture between a maximally entangled state and a fully mixed state such that the marginal on \(\bar D_i\) is uniform, and such that \(H_\alpha \left( {D_i\left| {\bar D_i} \right.} \right)_{\tau (c)} = \bar g - g(\delta _c)\) (here δ
+c
+ stands for the distribution with all the weight on element c). To ensure that this is possible, we need to choose \(d_{D_i}\) large enough, and it turns out that setting \(d_{D_i} = \left\lceil {2^{\parallel \nabla g\parallel _\infty }} \right\rceil\) suffices. We can then define a new sequence of EAT channels by \(\bar {\cal M}_i = {\cal D}_i \circ {\cal M}_i\).
+Armed with this, we apply the above argument to our new EAT channels. On the one hand, a more sophisticated version of Eq. (12) yields:
+On the other hand, the argument from Eq. (15) can be used here to give
+Combining these two bounds then yields the theorem.
+We remark that some of the concepts used in this work generalise techniques proposed in the recent security proofs for DI cryptography29.
+To analyse the key rates of the DIQKD protocol, we first find a lower bound on the amount of entropy accumulated during the run of the protocol, when the honest parties use their device to play the Bell games repeatedly. To this end, we consider the “entropy accumulation protocol” shown in Box 2. This protocol can be seen as the main building block of many DI cryptographic protocols.
+The construction of the min-tradeoff function fmin. The plot shows the values of the min-tradeoff function on a slice \(\tilde p(0) + \tilde p(1) = 1 - (1 - \gamma )^{s_{{\mathrm{max}}}}\)
+Entropy rate for entropy accumulation protocol. ηopt(ωexp) for γ = 1, smax = 1 and several choices of δest, n, εEA, and εs. We optimise the rates over all parameters which are not explicitly stated in the figure. The dashed line shows the optimal asymptotic (n → ∞) rate under the assumption that the devices are such that Alice, Bob, and Eve share an (unknown) i.i.d. state and n → ∞
+The entropy accumulation protocol creates m blocks of bits, each of maximal length \(s_{\max }\). Each block ends (with high probability) with a test round; this is a round in which Alice and Bob play the CHSH game with their device so that they can verify that the device acts as expected. The probability of each round to be a test round is γ. The rest of the rounds are generation rounds, in which Bob chooses a special input for his component of the device. In the end of the protocol, Alice and Bob check whether they had sufficiently many test rounds in which they won the CHSH game. If not, they abort.
+We note that the protocol is complete, in the sense that there exists an honest implementation of it (possibly noisy) which does not abort with high probability. Denoting the completeness error, i.e., the probability that the protocol aborts for an honest implementation of the devices D, by \(\varepsilon _{EA}^c\), one can easily show using Hoeffding’s inequality that for an honest i.i.d. implementation \(\varepsilon _{EA}^c \le {\mathrm{exp}}\left( { - 2n\delta _{{\mathrm{est}}}^2} \right)\).
+Next, we show that the protocol is also sound. That is, for any device D, if the probability that the protocol does not abort is not too small, then the total amount of smooth min-entropy is sufficiently high.
+The EAT can be used to bound the total amount of smooth min-entropy, \(H_{{\mathrm{min}}}^{\varepsilon _{\mathrm{s}}}\left( {\left. {A_1^nB_1^n} \right|X_1^nY_1^nT_1^nE} \right)_{\rho _{{ {|\Omega }}}}\), created when running the entropy accumulation protocol, given that it did not abort. Here n denotes the expected number of rounds of the protocol and εs is one of the security parameters (to be fixed later).
+Below we use the following notation. For each block j ∈ [m], \(\vec A_j\) denotes the string that includes Alice’s outputs in block j (note that the length of this string is unknown, but it is at most \(s_{\max }\)). \(\vec B_j,\vec X_j\), and \(\vec Y_j\) are defined analogously. To use the EAT, we make the following choices of random variables:
+The event Ω is the event of not aborting the protocol, as given in Step 11 in Box 2:
+The EAT channels are chosen to be
+where \({\cal M}_j\) describes Steps 2–10 of block j in the entropy accumulation protocol (Box 2). These channels include both the actions made by Alice and Bob as well as the operations made by the device D in these steps. Note that the Device’s operations can always be described within the formalism of quantum mechanics, although we do not assume we know them. The registers Rj−1 and R
+j
+ hold the quantum state of the device in the beginning and the end of the j’th step of the protocol, respectively.
+Lemma 5: The channels \({\cal M}_j\) described above are EAT channels.
+Proof. For the channels to be EAT channels, they need to fulfil the conditions given in Definition 1. We show that this is indeed the case. First, \(\tilde C_j\) are classical registers with \(\tilde C_j \in \{ 0,1, \bot \}\) and \(d_{\vec A_j} \times d_{\vec B_j} \le 6^{s_{{\mathrm{max}}}}\). Second, \(\tilde C_j\) is determined by the classical registers \(\vec A_j,\vec B_j,\vec X_j,\vec Y_j,\vec T_j\) as shown in Box 2. Therefore, \(\tilde C_j\) can be calculated without modifying the marginal on those registers. The third condition is also fulfilled since the inputs are chosen independently in each round and hence \(\vec A_{1 \ldots j - 1}\vec B_{1 \ldots j - 1} \leftrightarrow \vec X_{1 \ldots j - 1}\vec Y_{1 \ldots j - 1}\vec T_{1 \ldots j - 1}E \leftrightarrow \vec X_j\vec Y_j\vec T_j\) trivially holds.
+To continue one should devise a min-tradeoff function. Let \(\tilde p\) be the probability distribution describing \(\tilde C_j\). We remark that due to the structure of our EAT channels, it is sufficient to consider \(\tilde p_{}^{}\) for which \(\tilde p(1) + \tilde p(0) = 1 - (1 - \gamma )^{s_{{\mathrm{max}}}}\) (otherwise the set Σ defined in Eq. (6) is an empty set).
+The following lemma gives a lower bound on the von Neumann entropy of the outputs in a single block.
+Lemma 6: Let \(\bar s = \frac{{1 - (1 - \gamma )^{s_{{\mathrm{max}}}}}}{\gamma }\) be the expected length of a block and h the binary entropy function. Then,
+where the entropy is evaluated on a state that wins the CHSH game, in the test round, with probability
+Proof sketch. The amount of entropy accumulated in a single round in a block is given in Eq. (2) in the main text. To get the amount of entropy accumulated in a block, one can use the chain rule for the von Neumann entropy. The result is then
+where the pre-factors (1 − γ)(i−1) are attributed to the fact that the entropy in each round is non-zero only if the round is part of the block, i.e., if a test round was not performed before the i’th round in the block, and ω
+i
+ denotes the winning probability in the i’th round (given that a test was not performed before).
+The value of each ω
+i
+ is not fixed completely given ω*. However, by the operation of the EAT channels the following relation holds:
+To conclude the proof, we thus need to minimise \(H\left( {\vec A_j\vec B_j|\vec X_j\vec Y_j\vec T_jR{\prime}} \right)\) under the above constraint. Using standard techniques, e.g., Lagrange multipliers, one can see that the minimal value of this entropy is achieved for ω
+i
+ = ω* for all i and the lemma follows.
+The bound given in the above lemma can now be used to define the min-tradeoff function \(f_{{\mathrm{min}}}\left( {\tilde p} \right)\). As the derivative of the function plays a role in the final bound, we must make sure it is not too large at any point. This can be enforced by “cutting” the function at a chosen point \(\tilde p_t\) and “gluing” it to a linear function starting at that point, as shown in Fig. 6. \(\tilde p_t\) can be chosen depending on the other parameters such that the total amount of smooth min-entropy is maximal. Following this idea, the resulting min-tradeoff function is given by
+Let ε
+EA
+ be the desired error probability of the entropy accumulation protocol. We can then use Theorem 3 to say that either the probability of the protocol aborting is greater than 1 − ε
+EA
+ or the following bound on the total smooth min-entropy holds:
+where
+To illustrate the behaviour of the entropy rate ηopt, we plot it as a function of the expected Bell violation ωexp in Fig. 7 for γ = 1 and smax = 1. For comparison, we also plot in Fig. 7 the asymptotic rate (n → ∞) under the assumption that the state of the device is an (unknown) i.i.d. state. In this case, the quantum AEP appearing in Eq. (1) implies that the optimal rate is the von Neumann entropy accumulated in one round of the protocol (as given in Eq. (2)). This rate, appearing as the dashed line in Fig. 7, is an upper bound on the entropy that can be accumulated. One can see that as the number of rounds in the protocol increases, our rate ηopt approaches this optimal rate.
+For the calculations of the DIQKD rates later on, we choose \(s_{{\mathrm{max}}} = \left\lceil {{\textstyle{1 \over \gamma }}} \right\rceil\). For this choice, the first-order term of ηopt is linear in n and a short calculation reveals that the second-order term scales, roughly, as \(\sqrt {n/\gamma }\).
+Our DIQKD protocol, shown in Box 3, is based on the entropy accumulation protocol described above. In the first part of the protocol Alice and Bob use their devices to produce the raw data, similarly to what is done in the entropy accumulation protocol. The main difference is that Bob’s outputs always contains his measurement outcomes (instead of being set to \(\bot\) in the generation rounds); to make the distinction explicit, we denote Bob’s outputs in the DIQKD protocol with a tilde, \(\tilde B_1^n\).
+We now describe the three post-processing steps, error correction, parameter estimation, and privacy amplification, in more detail.
+
+Given:
+
+ D—device that can play the CHSH game repeatedly
+ \(m \in {\Bbb N}_ +\)—number of blocks
+ \(s_{{{\rm max}}} \in {\Bbb N}_ +\)—maximal length of a block
+ γ ∈ (0, 1]—probability of a test round
+ ωexp—expected winning probability in the honest implementation
+ δest ∈ (0, 1)—width of the statistical confidence interval
+For every block j ∈ [m] do Steps 2–10:
+ Set i = 0 and \(\tilde C_j = \bot\).
+ If \(i \le s_{{{\rm max}}}\):
+  Set i = i + 1.
+  Alice and Bob choose T
+i
+ ∈ {0, 1} at random such that \({{\rm Pr}}(T_i = 1) = \gamma\).
+  If T
+i
+ = 1 Alice and Bob choose inputs X
+i
+ ∈ {0,1} and Y
+i
+ ∈ {0,1}.
+  If T
+i
+ = 0 they choose inputs X
+i
+ ∈ {0, 1} and Y
+i
+ = 2.
+  Alice and Bob use D with X
+i
+,Y
+i
+ and record their outputs as A
+i
+, B
+i
+.
+  If T
+i
+ = 0 Bob updates B
+i
+ to B
+i
+ = ⊥.
+  If T
+i
+ = 1 they set \(\tilde C_j = w\left( {A_i,B_i,X_i,Y_i} \right)\) and \(i = s_{{{\rm max}}} + 1\).
+Alice and Bob abort if \(\mathop {\sum}\nolimits_{j \in \left[ m \right]} {\kern 1pt} \tilde C_j \; < \; \left[ {\omega _{{{\rm exp}}}\left( {1 - (1 - \gamma )^{s_{{{\rm max}}}}} \right) - \delta _{{{\rm est}}}} \right] \cdot m\).
+
+Given:
+
+ D—device that can play the CHSH game repeatedly
+ \(m \in {\Bbb N}_ +\)—number of blocks
+ \(s_{{{\rm max}}} \in {\Bbb N}_ +\)—maximal length of a block
+ γ ∈ (0, 1]—probability of a test round
+ ωexp—expected winning probability in the honest implementation
+ δest ∈ (0, 1)—width of the statistical confidence interval
+ EC—error correction protocol which leaks leakEC bits and has error probability εEC
+ PA—privacy amplification protocol with error probability εPA
+For every block j ∈ [m] do Steps 2–8:
+ Set i = 0 and \(\tilde C_j = \bot\).
+ If i ≤ smax:
+  Set i = i + 1.
+  Alice and Bob choose T
+i
+ ∈ {0, 1} at random such that Pr(T
+i
+ = 1) = γ.
+  If T
+i
+ = 1 Alice and Bob choose inputs X
+i
+ ∈ {0,1} and Y
+i
+ ∈ {0,1}.
+  If T
+i
+ = 0 they choose inputs X
+i
+ ∈ {0, 1} and Y
+i
+ = 2.
+  Alice and Bob use D with X
+i
+, Y
+i
+ and record their outputs as A
+i
+, \(\tilde B_i\).
+Error correction: Alice and Bob apply the error correction protocol EC on the outputs \(A_1^n\) and \(\tilde B_1^n\), communicating O in the process. If EC aborts they abort the protocol. Otherwise, they obtain raw keys denoted by KA and KB.
+Parameter estimation: Using \(\tilde B_1^n\) and KB, Bob sets \(\tilde C_j = w\left( {A_i,B_i,X_i,Y_i} \right)\) for the blocks with a test round at round i and \(\tilde C_j = \bot\) otherwise. He aborts if \(\mathop {\sum}\nolimits_{j \in \left[ m \right]} {\kern 1pt} \tilde C_j < \left[ {\omega _{{{\rm exp}}}\left( {1 - \left( {1 - \gamma } \right)^{s_{{{\rm max}}}}} \right) - \delta _{{{\rm est}}}} \right] \cdot m\).
+Privacy amplification: Alice and Bob apply the privacy amplification protocol PA on KA and KB to create their final keys \(\tilde K_{\mathrm{A}}\) and \(\tilde K_{\mathrm{B}}\) of length \(\ell\) as defined in Eq. (9).
+Alice and Bob use an error correction protocol EC to obtain identical raw keys KA and KB from their bits \(A_1^n\), \(\tilde B_1^n\). In our analysis, we use a protocol, based on universal hashing, which minimises the amount of leakage to the adversary41,42. To implement this protocol, Alice chooses a hash function and sends the chosen function and the hashed value of her bits to Bob. We denote this classical communication by O. Bob uses O, together with his prior knowledge \(\tilde B_1^nX_1^nY_1^nT_1^n\), to compute a guess \(\hat A_1^n\) for Alice’s bits \(A_1^n\). If EC fails to produce a good guess, Alice and Bob abort; in an honest implementation, this happens with probability at most \(\varepsilon _{{\mathrm{EC}}}^c\). If Alice and Bob do not abort, then they hold raw keys \(K_{\mathrm{A}} = A_1^n\) and \(K_{\mathrm{B}} = \hat A_1^n\) and KA = KB with probability at least 1 − εEC.
+Due to the communication from Alice to Bob, leakEC bits of information are leaked to the adversary. The following guarantee holds for the described protocol42:
+for \(\varepsilon _{{\mathrm{EC}}}^c = \varepsilon\prime _{{\mathrm{EC}}}+ \varepsilon _{{\mathrm{EC}}}\) and where \(H_0^{\varepsilon\prime _{{\mathrm{EC}}} }\left( {A_1^n|\tilde B_1^nX_1^nY_1^nT_1^n} \right)\) is evaluated on the state in an honest implementation of the protocol. If a larger fraction of errors occur when running the actual DIQKD protocol (for instance due to adversarial interference) the error correction might not succeed, as Bob will not have a sufficient amount of information to obtain a good guess of Alice’s bits. If so, this will be detected with probability at least 1 − εEC and the protocol will abort. In an honest implementation of the device, Alice and Bob’s outputs in the generation rounds should be highly correlated in order to minimise the leakage of information.
+After the error correction step, Bob has all of the relevant information to perform parameter estimation from his data alone, without any further communication with Alice. Using \(\tilde B_1^n\) and KB, Bob sets \(\tilde C_j = w_{{\mathrm{CHSH}}}\left( {\hat A_i,\tilde B_i,X_i,Y_i} \right) = w_{{\mathrm{CHSH}}}\left( {K_{{\mathrm{B}}i},\tilde B_i,X_i,Y_i} \right)\) for the blocks with a test round (which was done at round i of the block) and \(\tilde C_j = \bot\) otherwise. He aborts if the fraction of successful test rounds is too low, that is, if \(\mathop {\sum}\nolimits_{j \in \left[ m \right]} {\kern 1pt} \tilde C_j < \left[ {\omega _{{\mathrm{exp}}}\left( {1 - (1 - \gamma )^{s_{{\mathrm{max}}}}} \right) - \delta _{{\mathrm{est}}}} \right] \cdot m\).
+As Bob does the estimation using his guess of Alice’s bits, the probability of aborting in this step in an honest implementation, \(\varepsilon _{{\mathrm{PE}}}^c\), is bounded by \(\varepsilon _{{\mathrm{EA}}}^c + \varepsilon _{{\mathrm{EC}}}\).
+Finally, Alice and Bob use a (quantum-proof) privacy amplification protocol PA (which takes some random seed S as input) to create their final keys \(\tilde K_{\mathrm{A}}\) and \(\tilde K_{\mathrm{B}}\) of length \(\ell\), which are close to ideal keys, i.e., uniformly random and independent of the adversary’s knowledge.
+For simplicity, we use universal hashing43 as the privacy amplification protocol in the analysis below. Any other quantum-proof strong extractor, e.g., Trevisan’s extractor44, can be used for this task and the analysis can be easily adapted.
+The secrecy of the final key depends only on the privacy amplification protocol used and the value of \(H_{{\mathrm{min}}}^{\varepsilon _{\mathrm{s}}}\left( {A_1^n|X_1^nY_1^nT_1^nOE} \right)\), evaluated on the state at the end of the protocol, conditioned on not aborting. For universal hashing, for every εPA,εs∈(0, 1), a secure key of maximal length
+is produced with probability at least 1 − εPA − εs.
+Correctness, secrecy, and overall security of a DIQKD protocol are defined as follows45:
+Definition 7 (Correctness): A DIQKD protocol is said to be εcorr-correct, when implemented using a device D, if Alice and Bob’s keys, \(\tilde K_{\mathrm{A}}\) and \(\tilde K_{\mathrm{B}}\) respectively, are identical with probability at least 1 − εcorr. That is, \({\mathrm{Pr}}\left( {\tilde K_{\mathrm{A}} \ne \tilde K_{\mathrm{B}}} \right) \le \varepsilon _{{\mathrm{corr}}}\).
+Definition 8 (Secrecy): A DIQKD protocol is said to be εsec-secret, when implemented using a device D, if for a key of length l, \(\left( {1 - {\mathrm{Pr}}\left[ {{\mathrm{abort}}} \right]} \right)\left\| {\rho _{\tilde K_{\mathrm{A}}E} - \rho _{U_l} \otimes \rho _E} \right\|_1 \le \varepsilon _{{\mathrm{sec}}}\), where E is a quantum register that may initially be correlated with D.
+εsec in the above definition can be understood as the probability that some non-trivial information leaks to the adversary45. If a protocol is εcorr-correct and εsec-secret (for a given D), then it is \(\varepsilon _{{\mathrm{QKD}}}^s\)-correct-and-secret for any \(\varepsilon _{{\mathrm{QKD}}}^s \ge \varepsilon _{{\mathrm{corr}}} + \varepsilon _{{\mathrm{sec}}}\).
+Definition 9 (Security): A DIQKD protocol is said to be \(\left( {\varepsilon _{{\mathrm{QKD}}}^s,\varepsilon _{{\mathrm{QKD}}}^c,l} \right)\)-secure if:
+(Soundness) For any implementation of the device D it is \(\varepsilon _{{\mathrm{QKD}}}^s\)-correct-and-secret.
+(Completeness) There exists an honest implementation of the device D such that the protocol does not abort with probability greater than \(1 - \varepsilon _{{\mathrm{QKD}}}^c\).
+Below we show that the following theorem holds.
+Theorem 10: The DIQKD protocol described above is \(\left( {\varepsilon _{{\mathrm{QKD}}}^s,\varepsilon _{{\mathrm{QKD}}}^c,\ell } \right)\)-secure, with \(\varepsilon _{{\mathrm{QKD}}}^s \le \varepsilon _{{\mathrm{EC}}} + \varepsilon _{{\mathrm{PA}}} + \varepsilon _{\mathrm{s}} + \varepsilon _{{\mathrm{EA}}}\), \(\varepsilon _{{\mathrm{QKD}}}^c \le \varepsilon _{EC}^c + \varepsilon _{{\mathrm{EA}}}^c + \varepsilon _{{\mathrm{EC}}}\), and
+where \(t = \sqrt { - m\left( {1 - \gamma } \right)^2{\kern 1pt} {\mathrm{log}}{\kern 1pt} \varepsilon _{\mathrm{t}}{\mathrm{/}}2\gamma ^2}\) for any εt ∈ (0, 1).
+We now explain the steps taken to prove Theorem 10. The completeness part follows trivially from the completeness of the “subprotocols”.
+To establish soundness, first note that by definition, as long as the protocol does not abort it produces a key of length \(\ell\). Therefore, it remains to verify correctness, which depends on the error correction step, and security, which is based on the privacy amplification step. To prove security we start with Lemma 11, in which we assume that the error correction step is successful. We then use it to prove soundness in Lemma 12.
+Let \({\tilde{ \Omega }}\) denote the event of the DIQKD protocol not aborting and the EC protocol being successful, and let \(\tilde \rho _{A_1^n\tilde B_1^nX_1^nY_1^nT_1^nO_1^nE|{\tilde{ \Omega }}}\) be the state at the end of the protocol, conditioned on this event.
+Success of the privacy amplification step relies on the min-entropy \(H_{{\mathrm{min}}}^{\varepsilon _{\mathrm{s}}}\left( {A_1^n|X_1^nY_1^nT_1^nOE} \right)_{\tilde \rho _{|{\tilde{ \Omega }}}}\) being sufficiently large. The following lemma connects this quantity to \(H_{{\mathrm{min}}}^{\frac{{\varepsilon _{\mathrm{s}}}}{4}}\left( {A_1^nB_1^n|X_1^nY_1^nT_1^nE} \right)_{\rho _{|{ {\Omega }}}}\), on which a lower bound is provided in Eq. (31) above.
+Lemma 11: For any device D, let \(\tilde \rho\) be the state generated in the protocol right before the privacy amplification step. Let \(\tilde \rho _{|{\tilde{ \Omega }}}\) be the state conditioned on not aborting the protocol and success of the EC protocol. Then, for any εEA, εEC, εs, εt ∈ (0, 1), either the protocol aborts with probability greater than 1 − εEA − εEC or
+Proof sketch. Before deriving a bound on the entropy of interest, we remark that the t is chosen such that the probability that the actual number of rounds in the protocol, N, is larger than the expected number of rounds n plus t is εt. The above value for t can be derived by noticing that the sizes of the blocks are i.i.d. random variables which take values in [1, 1/γ].
+The key idea of the proof is to consider the following events:
+Ω: the event of not aborting in the entropy accumulation protocol. This happens when the Bell violation, calculated using Alice and Bob’s outputs (and inputs), is sufficiently high.
+\({\hat{ \Omega }}\): Suppose Alice and Bob run the entropy accumulation protocol, and then execute the EC protocol. The event \({\hat{ \Omega }}\) is defined by Ω and \(K_{\mathrm{B}} = A_1^n\).
+\({\tilde{ \Omega }}\): the event of not aborting the DIQKD protocol and \(K_{\mathrm{B}} = A_1^n\).
+The state \(\rho _{|{\hat{ \Omega }}}\) then denotes the state at the end of the entropy accumulation protocol conditioned on \({\hat{ \Omega }}\).
+Using a sequence of chain rules for smooth entropies46 and the fact that \(\tilde \rho _{A_1^nX_1^nY_1^nT_1^nE|{\tilde{ \Omega }}} = \rho _{A_1^nX_1^nY_1^nT_1^nE|{\hat{ \Omega }}}\) (\(\tilde B_1^n\) and \(B_1^n\) were traced out from \(\tilde \rho\) and ρ, respectively), one can conclude
+\(H_{{\mathrm{max}}}^{\frac{{\varepsilon _{\mathrm{s}}}}{4}}\left( {B_1^n|T_1^nE} \right)_{\rho _{|{\hat{ \Omega }}}}\) can be bounded from above. The intuition is that \(B_i \ne \bot\) only when T
+i
+ = 0, which happens with probability γ. The exact bound can be calculated using the EAT and is given by
+The above steps together with Eq. (31) conclude the proof.
+Using Lemma 11, one can prove that our DIQKD protocol is sound.
+Lemma 12: For any device D let \(\tilde \rho\) be the state generated by the DIQKD protocol. Then either the protocol aborts with probability greater than 1 − εEA − εEC or it is (εEC + εPA + εs)-correct-and-secret while producing keys of length \(\ell\), as defined in Eq. (35).
+Proof sketch. Assume the DIQKD protocol did not abort. We consider two cases. First, assume that the EC protocol was not successful (but did not abort). Then Alice and Bob’s final keys might not be identical. This happens with probability at most εEC. Otherwise, assume the EC protocol was successful, i.e., \(K_{\mathrm{B}} = A_1^n\). In that case, Alice and Bob’s keys must be identical also after the final privacy amplification step.
+The secrecy depends only on the privacy amplification step, and for universal hashing a secure key is produced as long as Eq. (34) holds. Hence, a uniform and independent key of length \(\ell\) as in Eq. (35) is produced by the privacy amplification step unless the smooth min-entropy is not high enough or the privacy amplification protocol was not successful, which happens with probability at most εPA + εs.
+According to Lemma 11, either the protocol aborts with probability greater than 1 − εEA − εEC or the entropy is sufficiently high to create the secret key.
+The expected key rates appearing in Fig. 5 in the main text are given by \(r = \ell {\mathrm{/}}n\). The key rate depends on the amount of leakage of information due to the error correction step, which in turn depends on the honest implementation of the protocol as mentioned above. To have an explicit bound, we consider the honest implementation described in the main text. Using Eq. (33) and the AEP, one can show that the amount of leakage in the error correction step is then given by
+To get the optimal key rates, one should fix the parameters of interest (e.g., \(\varepsilon _{{\mathrm{QKD}}}^s\), \(\varepsilon _{{\mathrm{QKD}}}^c\), and n) and optimise over all other parameters.
+The entropy accumulation protocol can be used to perform DI randomness expansion as well. In a DI randomness expansion protocol, the honest parties start with a short seed of perfect randomness and use it to create a longer random secret string. For the purposes of randomness expansion, we may assume that the parties are co-located, therefore, the main difference from the DIQKD scheme is that there is no need for error correction (and hence there is no leakage of information due to public communication).
+In order to minimise the amount of randomness required to execute the protocol, we adapt the main entropy accumulation protocol by deterministically choosing inputs in the generation rounds X
+i
+,Y
+i
+∈{0,1}. In particular, there is no use for the input 2 to Bob’s device, and no randomness is required for the generation rounds. Aside from the last step of privacy amplification, the remainder of the protocol is essentially the same as the entropy accumulation protocol.
+The plotted entropy rates in Fig. 7 are therefore also the ones relevant for a DI randomness expansion.
+Since we are concerned here not only with generating randomness but also with expanding the amount of randomness initially available to the users of the protocol, we should also evaluate the total number of random bits that are needed to execute the protocol. Random bits are required to select which rounds are generation rounds, i.e., the random variable \(T_1^n\), to select inputs to the devices in the testing rounds, i.e., those for which T
+i
+ = 0, and to select the seed for the quantum proof extractor used for privacy amplification. All of these can be accounted for using standard techniques and so we omit the detailed explanation and formulas.
+No data sets were generated or analysed during the current study.

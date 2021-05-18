@@ -1,0 +1,199 @@
+Correction of center of rotation and projection angle in synchrotron X-ray computed tomography
+An error in tomographic reconstruction parameters can result considerable artifacts in the reconstructed image, particularly in micro-computed tomography and nano-computed tomography. This study involved designing an automatic method for efficiently correcting errors resulting from incorrectly determined rotational axes and projection angles. In this method, errors are corrected by minimizing the “total variation” of a reconstructed image, and minimization is accomplished by using the gradient descent method. Compared with two previous methods, the proposed method achieved the best reconstruction results.
+Synchrotron X-ray computed tomography (SXCT) uses synchrotron radiation comprising high collimation and low diffraction X-ray beams as the light source for micro-computed tomography and nano-computed tomography1. The main advantage of SXCT is the high resolution and nondestructive visualization of the interior of objects. SXCT has been widely applied in biology studies and industrial applications such as visualization of tumor growth2 and nanofabrication3.
+Compared with images acquired using a well-calibrated CT scanner in a hospital, those acquired through SXCT more likely contain artifacts such as ring artifacts caused by imperfections in the detector4. In SXCT, the object rotates around a vertical axis to acquire projections from different angles. This image acquisition process considerably increases the introduction of errors into the reconstruction steps, and produces severe artifacts if the reconstruction parameters are not accurate. For example, tuning-fork artifacts are caused by errors in a reconstruction parameter5. Because a rotating object is required, the mechanical instability of the holder is also a major problem when images are at the nanoscale6. In the worst case, no reconstruction is possible.
+This paper proposes a method that suppresses the tuning-fork artifacts caused by biases of the rotational axis. As mentioned, the light source of SXCT is fixed; the object holder rotates around a vertical axis to acquire projections from different angles to construct a sinogram. The vertical line at the center of the sinogram should be the projection of the rotational axis; however, accomplishing this is highly difficult, particularly with high-resolution image acquisition. Although such inaccuracy can hardly be corrected through hardware improvement, but it can be resolved by using computer methods. Two methods has been reported to address this problem: entropy-based correction (ENP)7 and frequency-based correction (FC)8. The ENP method uses entropy9 to define a metric of reconstruction quality. The best possible reconstruction can be obtained by iteratively testing different biases of the rotational axis. The reconstruction that minimizes the metric is considered the best reconstruction. If the projections are parallel and considered over a half range (i.e., from 0° to 180°), the FC method estimates the bias in the frequency domain of the sinogram. The biases of the rotational axis also occurred in clinical tomography with full range scan (i.e., from 0° to 360°)10,11. There are many methods based on Helgason—Ludwig consistency condition (HLCC) can correct the bias in the full-range scan12,13,14. However, since the energy of synchrotron X-ray is larger than 1 GeV, the half-range scan is commonly used in SXCT to reduce radiation dose. Another reason of the half-range scan in SXCT is that some containers of biological samples cannot be rotated over 180°, even less than 180°, otherwise, the structure of container will affect the projection of sample to produce unwanted reconstruction results. Therefore, SXCT requires a correction method for the projection data acquired by half-range scan. That is main motivation of the proposed method.
+An angular error between two consecutive projections also causes artifacts in the reconstructed image. We present a phantom to explain these types of artifacts. Figure 1a shows the original image (the ground truth). Figure 1b shows the tomographic image of a phantom reconstructed from 600 projections with 1024 parallel beams, with the interval of the projection angles being 0.303°. Figure 1c shows the tomographic image reconstructed from the same projections but with its projection angles incorrectly configured to 0.3°; notable artifacts can be observed in the reconstructed image.
+Tomographic images of a phantom reconstructed from 600 projections with 1024 parallel beams; the interval of the projection angles was 0.303°. (a) Original image. (b) Result obtained using correct reconstruction parameters. (c) Result obtained using an interval of 0.3° instead of 0.303°.
+An iterative method similar to ENP can correct the projection angle errors. Suppose that the error is in the interval [u
+a
+, u
+b
+], u
+b
+ > u
+a
+. [u
+a
+, u
+b
+] can be digitized into n values, and each value is a candidate for the true projection angle. The desired reconstruction is achieved when the best reconstructed image is obtained with one of the digitized values. Depending on the value of n and the reconstruction algorithm, obtaining the best reconstruction could be a time-consuming task. This method is appropriate for correcting errors with a single parameter. If the number of parameters is k and the range of each parameter is divided into n values, nk combinations of the reconstruction parameters can be derived. Nevertheless, the computing time renders this method impractical, even for recovering two parameters.
+This paper presents a novel method that efficiently suppress artifacts caused by biases of the rotational axis and errors in the projection angle. Hereafter, we use δ
+B
+ and θ
+E
+ to denote these two types of errors, respectively. The proposed method uses the total variation15,16 as a metric for the quality of a reconstruction. The gradient descent method17 is then employed to minimize the total variation so that the parameters are corrected.
+The results obtained by applying the ENP, FC, and proposed methods are summarized in Table 1. Because we had ground truth information, we could compute the mean squared error (MSE) of the ground truth with the reconstruction results. The parameters used for applying the proposed method were H = 2, α0 = 1.0, and t
+m
+ = 20. For multi-range testing, we set 10 ranges for δ
+B
+ from ±55 pixels to ±10 pixels (u
+d
+ = 5 pixels) and 10 ranges for θ
+E
+ from ±0.03° to ±0.003° (v
+d
+ = 0.003°). The multi-range testing required approximately 970 s, nearly 9.7 seconds for a range. A visual comparison of the reconstructed images revealed that the proposed method achieved the best result. The MSE between the ground truth and the reconstructed image provided by the proposed method was 0.002, which is also the best among the three methods.
+The reconstruction without any correction is shown in Fig. 3b. The results obtained by applying the ENP, FC, and proposed methods are summarized in Table 2. The parameters used in the proposed method were H = 3, α0 = 1.0, and t
+m
+ = 20. The proposed method had the least MSE.
+The final test sample was a slice of mouse kidney. Figure 4a shows a reconstructed image of 1600 × 1600 pixels without error corrections. Figure 4b presents the enlarged view of the region bounded by the white-bordered rectangle in Fig. 4a. The ENP and FC methods were applied to compute δ
+B
+. The ENP and FC methods shifted the rotational axis toward the right by 2 and 3.5 pixels, respectively, and they required 19.5 and 12.5 s, respectively. The reconstruction results obtained using the ENP and FC methods are shown in Fig. 5a and b, respectively. With the same view boundary as in Figs 4a and 5d,e show the enlarged views of Fig. 5a,b, respectively. Improvements were observed after correction.
+Tomographic images of mouse kidney reconstructed from 601 projections with 1600 parallel beams. The projection angle was configured to be 0.2995° for projection acquisition. (a) Reconstruction result without any correction. (b) Partial enlargements of the region bounded by the white-bordered rectangle in (a).
+Reconstructed images of the same data in Fig. 4 after correcting errors. (a) Reconstruction result when δ
+B
+ was corrected by the ENP method. (b) Reconstruction result when θ
+E
+ was corrected by the FC method. (c) Reconstruction result when δ
+B
+ and θ
+E
+ were corrected by the proposed method. (d–f) Are the partial enlargements of the region in (a–c) respectively.
+The proposed multi-range testing method was applied with H = 3, α0 = 1.0, and t
+m
+ = 20. δ
+B
+ was shifted toward the right by 3.75 pixels, and θ
+E
+ was corrected to 0.3005° (0.167%). The time required was 1807 s (approximately 18 s for a test). Figure 5c shows the image obtained using the proposed method. Figure 5f shows the enlarged view of Fig. 5c with the same view boundary as in Fig. 4a.
+Because no ground truth was available for this data set, the MSE was not determined. Using a visual comparison of the three results could not indicate that the proposed method had the best result. This could be because the error with the projection angle was small (0.167%). However, the image reconstructed using the proposed method had the best contrast. From the experiments of the phantom data sets, we believe that our reconstructed image is closer to the true mouse kidney.
+All experiments and methods were performed in accordance with relevant guidelines and regulations. All experimental protocols were approved by a named institutional/licencing committee. Specifically, all procedures involving the animals were approved by the Academia Sinica Institute Animal Care and Utilization Committee (AS IACUC). BALB/c mice were provided by National Laboratory Animal Center, Taiwan. All mice were housed in individual ventilated cages with wood chip bedding and kept at 24 ± 2 °C with a humidity of 40–70% and a 12-hour light/dark cycle.
+The proposed method defines a metric to present the quality of the reconstructed image. The errors δ
+B
+ and θ
+E
+ are then computed by minimizing the quantity of the defined metric. Given an image with n × m pixels, let I(x, y) be the intensity of the pixel (x, y), x = 1, 2, …, n and y = 1, 2, …, m. The total variation, TV, is defined as in Eq. (1):
+where
+and
+According to the definition, TV is the sum over all pixels of squared differences from neighboring pixels. Note that Eq. (2) is an operator to enhance high-frequency signals (in particular, edge detection). Thus, TV is large if the image contains high-frequency signals such as noise and edges. Because a tomographic image with errors δ
+B
+ and θ
+E
+ contains artifacts of arcs and lines, TV is appropriate to measure the quality of tomographic reconstruction and serves as a guideline to correct any inaccurate reconstruction parameters. To ensure that TV is associated with the arc and line artifacts, a low-pass filter, such as a mean filter or a Gaussian filter, is applied to the images before TV is computed. In this study, a 7 × 7 Gaussian filter with a standard deviation of 0.84 was applied.
+Consider a differentiable function F(u), where u = [u1, u2, \(\cdots \), u
+k
+]T in the range [u
+a
+, u
+b
+], ua1 < ub1, ua2 < ub2, \(\cdots \), u
+ak
+ < u
+bk
+. If F is convex in the range [u
+a
+, u
+b
+], the minimum of F in the range [u
+a
+, u
+b
+] can be computed using the gradient descent method. The gradient descent recursion with t iterations can be written as
+where 1 ≤ i < t, α
+i
+ is the step size of the i-th iteration, and
+As i approaches t, ui+1 in Eq. (4) moves toward the minimum. Let Q be an operator for computing the TV of an image reconstructed by a tomographic reconstruction algorithm R with a set of parameters u. Assume that u is within the range between u
+a
+ and u
+b
+; then, Q is defined as follows:
+where P is a set of X-ray projections. Then, we can substitute Q(u) into Eq. (4) to yield
+In Eq. (7), \(Q^{\prime} ({{\bf{u}}}^{i})\) is estimated through numerical differentiation as in Eq. (8)
+where Δui is the variation of ui, and 2H is the number of neighbors of ui. To estimate the tendency of convergence of Q in the range [u
+a
+, u
+b
+], Δu should be large in the first iteration and should decrease as the number of current iterations increases. In this study, Δu1 = (u
+b
+ − u
+a
+)/2H. In the (i + 1)-th iteration, for the j-th component of Δu, \({\rm{\Delta }}{u}_{j}^{i+1}={\rm{\Delta }}{u}_{j}^{i}\mathrm{/2}\) if \({\rm{\Delta }}{u}_{j}^{i}\) is greater than Δv
+j
+, which is the smallest variation of u
+j
+; otherwise, \({\rm{\Delta }}{u}_{j}^{i+1}={\rm{\Delta }}{u}_{j}^{i}\). The step size α is given by Eq. (9):
+In real application, the domain may not be convex, and Eq. (7) may not converge or may converge to a local minimal. To avoid divergence, the number of iterations is limited by a preset value t
+m
+. The search fails if i = t
+m
+ or any component of ui is out of range. By contrast, the search terminates before i reaches t
+m
+ if Q′(ui) is a near-zero number and α
+i
+ = αi−1. In this case, Eq. (7) converges to the minimum or a local minimum. In the implementation, each of H, α0, and t
+m
+ should be assigned a reasonable value. Assigning H = 2 or 3, α0 = 1.0, and t
+m
+ = 20 is effective in most cases.
+The gradient descent method requires an adequate range of [u
+a
+, u
+b
+] such that the solution falls within the range. The initial point, u0, for the recursion (Eq. 7) also affects the result of the gradient descent method17. Determining the most adequate range and u0 for each case is difficult. We propose a multi-range testing method to overcome this problem. The idea of this method is simple: We test several ranges with different u0, and the best result among all the tests is the solution to the problem. The implementation is listed as Algorithm 1.
+Multi-range testing.
+In most cases, the largest and smallest ranges of δ
+B
+ are ±55 and ±10 pixels respectively. The largest and smallest ranges of θ
+E
+ are ±0.1% and ±0.01% of the projection angle. The ranges of δ
+B
+ and θ
+E
+ are digitized to 10 tests, where the differences between consecutive ranges of δ
+B
+ and θ
+E
+ are 2u
+d
+ and 2v
+d
+, respectively. Therefore, the total number of tests is 100. The test that achieves the least total variation, Q, yields the corrected δ
+B
+ and θ
+E
+.
+Two computer generated phantom images and a mouse kidney image were used in this experiment. Phantom images are often used as the ground truth to validate or compare tomographic reconstruction algorithms. In this study, the use of the phantom images was necessary because of the microscale or nanoscale resolution of SXCT; physically creating a phantom for ground truth is difficult or even impossible. Phantom 1 (Figs 1 and 2) was the Shepp-Logan phantom18, which is typically used to evaluate almost all reconstruction algorithms19. Because artifacts caused by δ
+B
+ and θ
+E
+ occur at places involving significant changes in intensity, we designed Phantom 2 (Fig. 3) to enhance the artifacts.
+Tomographic images of Phantom 1 reconstructed from 600 projections with 1024 parallel beams. The interval of angle for generating the projections was 0.303° and the projected rotational axis was biased to the right by 10 pixels. (a) Reconstruction result without correction of the interval of projection angles or the rotational axis. (b) Reconstruction result when δ
+B
+ was corrected by the ENP method. (c) Reconstruction result when δ
+B
+ was corrected by the FC method. (d) Reconstruction result when δ
+B
+ and θ
+E
+ were corrected by the proposed method.
+Tomographic images of Phantom 2 reconstructed from 180 projections with 512 parallel beams. The projection angle was 1.02° and the projected rotational axis was biased to the left by 10 pixels. (a) Target image. (b) Reconstruction result without correcting the errors. (c) Reconstruction result when δ
+B
+ was corrected by the ENP method. (d) Reconstruction result when θ
+E
+ was corrected by the FC method. (e) Reconstruction result when δ
+B
+ and θ
+E
+ were corrected by the proposed method.
+The sinogram of Phantom 1 comprised 1024 × 600 projection data (1024 parallel beams × 600 projection angles), and the projection angles was 0.303° when the sinogram was generated. During the reconstruction, the angle was configured as 0.3° (i.e., θ
+E
+ = 1%). The sinogram was shifted toward the right by 10 pixels as δ
+B
+ (i.e., δ
+B
+ = +10). Figure 2a shows an image of 1024 × 1024 pixels reconstructed without correcting the biases.
+Phantom 2 involved 16 white circles (with different radii) enclosed by a black square; the black square was inside a larger gray circle. The image size was 512 × 512 pixels. The sinogram of Phantom 2 comprised 512 × 180 projection data (512 parallel beams × 180 projection angles), and the projection angle was 1.02° when the sinogram was generated. During the reconstruction, the projection angle for reconstruction was configured as 1.0° (i.e., θ
+E
+ = 2%). The sinogram was shifted toward the left by 10 pixels as δ
+B
+ (i.e., δ
+B
+ = −10). Figure 3b shows an image reconstructed without correcting the biases.
+The third test sample was a set of real data, a sinogram acquired from a mouse kidney using the facility at the National Synchrotron Radiation Research Center, Hsinchu, Taiwan. The vessel tissues were stained by barium sulfate (BaSO4). The sinogram comprised of 1600 × 601 X-ray projections (1600 parallel beams × 601 projections). The size of each pixel was 2.76 μm2, and the projection angle of the instrument was recorded as 0.2995°.
+The correction methods used were ENP, FC, and the proposed method. Because the ENP and FC could correct δ
+B
+ only for a given range that was set to ±20 pixels, we left θ
+E
+ un-corrected during the application of ENP and FC. However, the proposed method corrected both biases.
+The reconstruction algorithm was the filtered back projection (FBP). An NVIDIA GTX 980 graphics processing unit (GPU) was used to accelerate the reconstruction20. A computer equipped with an Intel Xeon E3 CPU and 32 GB memory was used.

@@ -1,0 +1,114 @@
+On Wiener polarity index of bicyclic networks
+Complex networks are ubiquitous in biological, physical and social sciences. Network robustness research aims at finding a measure to quantify network robustness. A number of Wiener type indices have recently been incorporated as distance-based descriptors of complex networks. Wiener type indices are known to depend both on the network’s number of nodes and topology. The Wiener polarity index is also related to the cluster coefficient of networks. In this paper, based on some graph transformations, we determine the sharp upper bound of the Wiener polarity index among all bicyclic networks. These bounds help to understand the underlying quantitative graph measures in depth.
+In order to decide whether a given network is robust, a way to quantitatively measure network robustness is needed. Intuitively robustness is all about back-up possibilities, or alternative paths, but it is a challenge to capture these concepts in a mathematical formula. During the past years a lot of robustness measures have been proposed1. Network robustness research is carried out by scientists with different backgrounds, like mathematics, physics, computer science and biology. As a result, quite a lot of different approaches to capture the robustness properties of a network have been undertaken. All of these approached are based on the analysis of the underlying graph—consisting of a set of vertices connected by edges of a network1,2,3,4,5,6.
+One such category is the distance-based descriptors which include Wiener index, Harary index, etc. The use of Wiener index and related type of indices dates back to the seminal work of Wiener in 19477. Wiener introduced his celebrated index to predict the physical properties, such as boiling point, heats of isomerization and differences in heats of vaporization, of isomers of paraffin by their chemical structures. Wiener index has since inspired many distance-based descriptors in Chemometrics. These include Harary index8, hyper Wiener index9,10, Wiener polynomial11, Balaban index12, Wiener polarity index7 and information indices13,14,15. These indices, or commonly called descriptors, play significant roles in quantitative structure-activity relationship/quantitative structure-property relationship (QSAR/QSPR) models. It is known that the Wiener type indices depend both on a network’s number of nodes and its topology. For more results, we refer to16,17.
+Let G = (V, E) be a connected simple graph. The distance between two vertices u and v in G, denoted by dG(u, v), is the length of a shortest path between u and v in G. The Wiener polarity index of a graph G = (V, E), denoted by Wp(G), is the number of unordered pairs of vertices {u, v} of G such that dG(u, v) = 3, i.e.,
+The name “Wiener polarity index” is introduced by Harold Wiener7 in 1947. Wiener himself conceived the index only for acyclic molecules and defined it in a slightly different – yet equivalent – manner. In the same paper, Wiener also introduced another index for acyclic molecules, called Wiener index or Wiener distance index and defined by  Wiener7 used a liner formula of W and WP to calculate the boiling points tB of the paraffins, i.e.,  where a, b and c are constants for a given isomeric group. The Wiener index W(G) is popular in chemical literatures. For more results on Wiener index, we refer to the survey paper18 written by Dobrynin, Entringer and Gutman and some recent papers19,20,21,22,23.
+The Wiener polarity index is used to demonstrate quantitative structure-property relationships in a series of acyclic and cycle-containing hydrocarbons by Lukovits and Linert24. Hosoya in25 found a physical-chemical interpretation of Wp(G). Du, Li and Shi26 described a linear time algorithm APT for computing the Wiener polarity index of trees and characterized the trees maximizing the Wiener polarity index among all trees of given order. From then on, the Wiener polarity index started to attract the attention of a remarkably large number of mathematicians and so many results appeared. The extremal Wiener polarity index of (chemical) trees with given different parameters (e.g. order, diameter, maximum degree, the number of pendants, etc.) were studied, see27,28,29,30,31,32,33. Moreover, the unicyclic graphs minimizing (resp. maximizing) the Wiener polarity index among all unicyclic graphs of order n were given in34. There are also extremal results on some other graphs, such as fullerenes, hexagonal systems and cactus graph classes, we refer to35,36,37. Observe that the Wiener polarity index is also related to the cluster coefficient of networks.
+The main contributions of this paper can be summarized as follows:
+We provide a formula of the Wiener polarity index of bicyclic networks, from which the value of the index can be computed easily.
+We introduce three graph transformations, which can be used to increase the values of Wiener polarity index. These transformations can help to find more extremal values for other classes of molecular networks.
+We determine the maximum value of the Wiener polarity index of bicyclic networks and characterize the corresponding extremal graphs.
+Now let us introduce some notations. Let NG(v) be the neighborhood of v and  denote the degree of vertex v. For , we call  the ith neighborhood of v. If dG(v) = 1, then we call v a pendant vertex of G. Let g(Cx) be the length of cycle Cx in graph G, Pi denote a path with length i. For all other notations and terminology, not given here, see e.g.38.
+Let B be a bicyclic graph. Suppose and are two cycles in B with l (l ≥ 0) common vertices. Without loss of generality, we label the vertices of Cp in the clockwise direction and the vertices of Cq in the inverse clockwise direction. If l = 0, then there is one unique path P connecting Cp and Cq, which starts with v1 and ends with u1. We call this kind of bicyclic graph type I (see Fig. 1). If l = 1, then Cp and Cq have exactly one common vertex v1(u1). We call this kind of bicyclic graphs type II (see Fig. 1). If l  ≥ 2, then B contains exactly three cycles. The third cycle is denoted by Cz, where z = p + q − 2l + 2. Without loss of generality, assume that p ≤ q ≤ z and l − 2 ≤ p − 2 ≤ q − 2. The two cycles Cp and Cq have more than one common vertex . We call this kind of bicyclic graphs type III (see Fig. 1). In the following section, we use B, Cp, Cq, vi (1 ≤ i ≤ p), uj (1 ≤ j ≤ q), l as defined above, except as noted.
+The three types of bicyclic graphs.
+Let  be the bicyclic graph of type I, where P = v1u1 and . Especially, we denote this kind of graphs by, if ,  (i = 2, 3), . For a graph G = (V, E) and , we can construct a new graph H by identifying v1 with , denoted by  and we say Pl is incident to vertex v.
+Theorem 0.1. Let B1 be a bicyclic graph in type I and ,  be the desired graph attaining the maximum Wiener polarity index.
+If n = 6, then , and ;
+If n = 7, then , and ;
+If n = 8, then ,, where P1 is incident to the pendant vertex of v1, and ;
+If n = 9, then ,, where the path P1 is incident to the pendant vertex of v1,, where the path P1 is incident to one pendant vertex of v1, , where the two paths P1 are incident to the pendant vertex of v1, and ;
+If n = 10, then ,, where the path P1 is incident to one pendant vertex of v1, , where the two paths P1 are incident to the pendant vertices of v1, and ;
+If n = 11, then ,, where the path P1 is incident to one pendant vertex of v1,, where the two paths P1 are incident to the pendant vertices of v1, , where the three paths P1 are incident to the pendant vertices of v1, and ;
+If n = 12, then , , where P1 is incident to one pendant vertex of v1, , where the two paths P1 are incident to the pendant vertices of v1, , where the three paths P1 are incident to the pendant vertices of v1, and ;
+If n = 13, then , , , where P1 is incident to one pendent vertex of v1, , where P1 is incident to one pendant vertex of v1,, where the two paths P1 are incident to the pendant vertices of v1, , where the two paths P1 are incident to the pendant vertices of v1, , where the three paths P1 are incident to the pendant vertices of v1,, where the three paths P1 are incident to the pendant vertices of v1,, where the four paths P1 are incident to the pendant vertices of v1, and ;
+If n = 14, then , , , where P1 is incident to one pendent vertex of v1, , where the two paths P1 are incident to the pendant vertices of v1, , where the three paths P1 are incident to the pendant vertices of v1, , where the four paths P1 are incident to the pendant vertices of v1, and ;
+If n ≥ 15, then , and . □
+Let be the bicyclic graph in type II, where  and s1 = t1. When n is large enough, it can be easily checked that the graph maximizing the Wiener polarity index is  (see support information).
+Theorem 0.2. Let B2 be a bicyclic graph in type II and ,  be the desired graph attaining the maximum Wiener polarity index.
+If n = 5, then  and Wp(B2) = 0;
+If n = 6, then ,, and ;
+If n = 7, then ,, and ;
+If n = 8, then ,, and ;
+For n ≥ 9, let  .
+If r = 0, then ,, and ;
+If r = 1, then , and ;
+If r = 2, then , and .□
+Let be the bicyclic graph in type III, where , s1 = t1, s2 = t1 and l = 1. Let be the bicyclic graph in type III, where , s1 = t1, s2 = t1 and l = 1. When n is large enough, it can be checked that the graph maximizing the Wiener polarity index is .
+Theorem 0.3. Let B3 be a bicyclic graph in type III and,  be the desired graph attaining the maximum Wiener polarity index.
+If n = 4, then  and Wp(B3) = 0;
+If n = 5, then , and ;
+If n = 6, then , where P2 is incident to vertex v1 or v3, and ;
+If n = 7, then , where the two paths P1 are incident to the pendant vertex of v1, and ;
+If n = 8, then , where the three paths P1 are incident to the pendant vertex of v1, and ;
+If n = 9, then , where the four paths P1 are incident to the pendant vertex of v1, , where the three paths P1 are incident to the pendant vertices of v1, and ;
+If n = 10, then , where the four paths P1 are incident to the pendant vertices of v1, and ;
+If n = 11, then , where the five paths P1 are incident to the pendant vertices of v1,, where the four paths P1 are incident to the pendant vertices of v1,,, and ;
+For n ≥ 12, let  .
+If r = 0, then , , and ;
+If r = 1, then ,, and ;
+If r = 2, then , and . □
+Theorem 0.4. Let B be a bicyclic graph of order n (≥4), B* be the bicyclic graph with the maximum polarity index among all bicyclic graphs.
+If n = 4, then  and Wp(B3) = 0;
+If n = 5, then , and ;
+If n = 6, then , and ;
+If n = 7, then , , where the two paths P1 are incident to the pendant vertex of v1 and ;;
+If n = 8, then , , where P1 is incident to one pendant vertex of v1, , where the three paths P1 are incident to the pendant vertex of v1, and ;
+If n = 9, then , , where the path P1 is incident to the pendant vertex of v1, , where the path P1 is incident to one pendant vertex of v1, , where the two paths P1 are incident to the pendant vertex of v1, , , where the four paths P1 are incident to the pendant vertex of v1, , where the three paths P1 are incident to the pendant vertices of v1, and ;
+If n = 10, then , , where the path P1 is incident to one pendant vertex of v1, , where the two paths P1 are incident to the pendant vertices of v1, , , where the four paths P1 are incident to the pendant vertices of v1, and ;
+For n ≥ 11, let  .
+If r = 0, then , , and ;
+If r = 1, then , and ;
+If r = 2, then , and . □
+Quantifying the structure of complex networks is still intricate because the structural interpretation of quantitative network measures and their interrelations have not yet been explored extensively. In this paper, we studied sharp upper bounds for the Wiener polarity index among all bicyclic networks, by using some transformations. The graphs attaining these bounds are also characterized. The proof techniques use structural properties of the graphs under consideration and it may be intricate to extend the techniques when using more general graphs.
+An interesting thing is that the Wiener polarity index is related to a pure mathematical problem: counting the number of subgraphs of a graph. This counting problem is a basic problem in mathematics but much more complicated. For example, Alon and Bollobás provide some results on this topic, e.g.39,40,41.
+As a future work, we will consider the extremal problems of the Wiener polarity index for general networks and also some special networks. Furthermore, we would like to explore advanced structural properties of the Wiener polarity index and relations between the Wiener polarity index and some other topological indices. On the other hand, it would be interesting to investigate the applications of Wiener polarity index in characterizing the structure properties of complex networks and studying algorithm theory and computational complexity. For instance, one can consider the possibility of using the Wiener polarity index or other distance measures to study other very interesting algorithms, like the google algorithm in complex networks42,43.
+First we introduce some operations on bicyclic graphs, then we give the corresponding lemmas which state that the Wiener polarity index is not decreasing after applying these operations on bicyclic graphs.
+Let B be a bicyclic graph. As we have claimed, suppose and are two cycles. If both  and  are stars, then we denote such a bicyclic graph by, where si and tj represent the number of pendant vertices of vi and uj, respectively.
+We define Operation I as follows. Let TB[v] denote a hanging tree on vertex v of a bicyclic graph B with p ≥ 4, q ≥ 4, where v is on the cycle of B. Among all hanging trees, suppose  is one of the longest paths from the root v to a leaf cr in TB[v]. If r ≥ 2, then after deleting the edge vc1 from B, we obtain a bicyclic graph A and a tree T such that  and . Let B* denote the bicyclic graph obtained from A and T by identifying c1 and v′ (a neighbor of v on the cycle of B) and adding a new hanging leaf vx to v.
+We define Operation II as follows. Let B be a bicyclic graph with p = 3, TB[vi] be a hanging tree rooted at vi (i = 1, 2, 3). Let  be one of the longest paths from the root vi to a leaf cr of the hanging tree TB[vi].
+For r ≥ 3, we define a new graph B* as follows:
+For r = 2, the operation differs on the three types of bicyclic graphs.
+(1) For bicyclic graphs in type I, we let
+where  is on the path .
+(2) For bicyclic graphs in type II, by considering the value of q, there are two cases.
+Case 1. q ≥ 4. In this case, let
+where  is the root vertex mentioned above.
+Case 2. q = 3 and . Here we let Cq = v1v4v5v1. We define an operation as follows: delete TB[vi]\vi and add a copy of TB[vi] to vj by identifying vj and  which is a copy of vi. We call this operation “move TB[vi] to vj”. By considering the number of vertices on the cycles of B with hanging trees, there are two subcases.
+Subcase 2.1. There is only one vertex  with a hanging tree. Let , .
+For the case vi = v1, we apply operations as follows. If b ≥ 4, then move ,  to v2 and  (3 ≤ j ≤ b) to v3; if b = 3, then move ,  to v2 and ,  to v3; if b = 2, then move ,  to v2 and  to v3; if b = 1, then move  to v2 and  to v3. The new graph is denoted by B*.
+For the case vi = v2, we construct a new graph .
+Subcase 2.2. There are at least two vertices vs, vt  with hanging trees. In this subcase, let , where .
+(3) For the bicyclic graphs in type III. By considering the value of q, there are two cases.
+Case 1. q ≥ 4. In this case, we can apply Operation 1 on Cz.
+Case 2. q = 3 and . Here let Cq = v1v2v4v1. We can move TB[v4] to v3 to get a new graph B′ satisfying Wp(B′) = Wp(B). By considering the number of vertices on the cycles of B′ with hanging trees, there are two subcases.
+Subcase 2.1. There exists only one vertex, say , which has a hanging tree. Firstly, move TB′[vi] to v3 (denote the new graph by B″), delete a vertex in  and meanwhile subdivide edge v1v4 (denote the new graph by ); secondly, move all the other vertices in  to v1 (denote the new graph by B″′); thirdly, if , then just move one pendant vertex of v1 to v2; if , then move one pendant vertex of v3 to v2.
+Subcase 2.2. There exist two vertices, say , which have hanging trees. If i = 1 and j = 2, then move TB′[v2] to v3. Now we can only consider the case i = 1 and j = 3.
+If there exists , then delete c2 and subdivide the edge v1v4 (denote the new graph by B″). Now return to the situation in Case 1.
+If and , then delete a vertex  and subdivide the edge v1v4. Now return to Case 1. For the situation that , delete a vertex  and subdivide the edge v1v4, move all pendant vertices in  to v2, at last move one pendant vertex of v1 or v2 to v3.
+Subcase 2.3. There exist three vertices which have hanging trees. By deleting some pendant vertex in , where  and meanwhile subdividing the edge v1v4, we return to the situation in Case 1.
+The final graph obtained after the above operation is denoted by B*.
+We define Operation III as follows. Let B be a bicyclic graph. If dB(v) = 2, then let , where v′, , . We call such an operation smooth v to x.
+We define Operation IV as follows. Let B be a bicyclic graph, where  and  are both stars. Denote the set of the pendant vertices of vi(uj) by Vi(Uj).
+For bicyclic graphs in type I, we will take the following two steps.
+Step 1. For Cp and , if i is odd, then move Vi to v1 and smooth vi to v2; if i is even, then move Vi to v2 and smooth vi to v1. For Cq and , if j is odd, then move Uj to u1 and smooth uj to u2; if j is even, then move Uj to u2 and smooth uj to u1. Therefore, we obtain a graph  with a unique path P connecting Cp and Cq. Let the set of hanging leaves of u1, u2, uq be , , , respectively.
+Step 2. Let ,  (1 ≤ k ≤ t).
+If k is odd, then move Wk to v3 and smooth wk to v2; if k is even, then move Wk to v2 and smooth wk to v3.
+If t is odd, then move  to v2,  to v1,  to v3; if t is even and t ≥ 2, then move  to v3,  to v1 and  to v2, respectively; if t = 0,  and d(v2) = d(v3) = 2, let  and , then for the situation that b = 1, move b1 to v2 and move a1 to v3, for the situation that b ≥ 2, move b1 to v2 and move  to v3; if t = 0 and d(vi) = 2, , then move  to vi,  to v1,  to vj, respectively.
+Finally, we get a new graph  and there is a unique path P = v1u1 connecting Cp and Cq.
+For bicyclic graphs in type II, we also give two steps as follows.
+Step 1. For Cp and , if i is odd, then move Vi to v1 and smooth vi to v2; if i is even, then move Vi to v2 and smooth vi to v1. For Cq and , if j is odd, then move Uj to u1 and smooth uj to u2; if j is even, then move Uj to u2 and smooth uj to u1. Thus we get a graph  with s1 = t1. Let the set of hanging leaves of u1, u2, uq be , , , respectively.
+Step 2. By moving  to v2,  to vp, we have  with s1 = t1.
+For bicyclic graphs in type III, the operation is defined as follows. Recall that we use l (≥1) to denote the number of common vertices of Cp and Cq and without loss of generality, assume l − 2 ≤ p − 2 ≤ q − 2.
+If p ≥ 3 and q ≥ 4, then we will take the following three steps.
+Step 1. For , . If i is odd, then move Vi to v1; if i is even, then move Vi to v2; if j is odd, then move Uj to v1; if j is even, then move Uj to v2; move Uq to vp.
+Step 2. If l = 2 or 3, smooth vertices  to v1 and v2 alternately.
+ If l ≥ 4, then we first smooth vertices  to v1 and v2 alternately; then smooth vertices  to v1 and v2 alternately.
+ After applying this operation, we get a new graph B′ with cycles Cp′, Cq′ and Cz′. Let l′ be the number of common vertices of Cp′ and Cq′, p′ (p′ = 3 or 4) be the number of vertices of the smallest cycle of B′, then we have l′ = 2 or l′ = 3. Now relabel the vertices on Cp′ and Cq′ of B′ and we have  and .
+Step 3. Considering the value of l′, there are two cases.
+Case 1. l′ = 2.
+ We just smooth  to v1 and v2 alternately and smooth uq′−1 to vp′. The new graph obtained is denoted by .
+Case 2. l′ = 3,  and  with s1 = t1.
+ Let . If q′ ≥ 5, then smooth v3 to vertex v1, smooth  to v1 and v2 alternately and smooth uq′−1 to v4; if q′ = 4 and , then we do nothing; if q′ = 4 and , then move the pendant vertices of v2 to v4.
+ Finally, we get the desired graph .
+If p = 3 and q = 3, by Operation II on B and its resultant graphs repeatedly, we have a new graph . Move the pendant vertices of u3 to v3, we obtain .
