@@ -1,0 +1,17 @@
+
+
+
+<form action = "/search" method = "post">
+    <input type="text" name = "query">
+    <input type ="submit" value = "run">
+</form>
+
+
+{% for title in info %}
+<p>{{title.title}}</p>
+{% if title.link %}
+<p><a href={{title.link}}>{{title.link}}</a></p>
+{% endif %}
+<p>{{title.paragraph}}</p>
+
+{% endfor %}

@@ -9,7 +9,6 @@ LOCAL_PATH = "./articles/"
 BASE_PATH = 'https://www.nature.com'
 SEARCH_PATH = 'https://www.nature.com/search?article_type=protocols,research,reviews&subject='
 
-
 def save_article(href, tags):
         filename = LOCAL_PATH+href[len(BASE_PATH)+10:]+".txt"
         with open(filename,"a") as f:
@@ -42,19 +41,23 @@ def crawl_nature():
             if article.find('span',{'class':'upper text-orange'}):
                 article_url = article.find('a',{'itemprop':'url'})['href']
                 href = BASE_PATH + article_url
+                filename = LOCAL_PATH+href[len(BASE_PATH)+10:]+".txt"
 
-                if article_url[10:]+".txt" not in listdir(LOCAL_PATH):
+                if filename not in listdir(LOCAL_PATH):
                     print(href)
                     res=requests.get(href)
                     article_bs=BeautifulSoup(res.content,'lxml')
 
                     article_title = article_bs.find_all('h1',{'class':'c-article-title'})
                     save_article(href,article_title)
+
+                    #save link to article in file
                     
+                    with open(filename,"a") as f:
+                        f.write("#"+href+"\n")
 
-
-                    #all sections that will be crawled, usually those all all the sections
-                    #that contain content we want to obtain, ommiting references etc.
+                    #all sections that will be crawled; usually those are all the sections
+                    #that contain content we want to obtain ommiting references etc.
                     sections_found = 0
                     section_titles = (["Abstract","Introduction","Background","Results","Discussion","Data","Model","Results and discussion","Results and applications"
                     "Conclusions","Methods",])
@@ -70,13 +73,12 @@ def crawl_nature():
                         cnt+=1
                     #if article structure didn't follow the standard
                     else:
-                        os.remove(LOCAL_PATH+href[len(BASE_PATH)+10:]+".txt")
+                        os.remove(filename)
                     if cnt == no_to_crawl:
                         return
         page+=1
 
     print("No more articles available")
-
 
 crawl_nature()
 
